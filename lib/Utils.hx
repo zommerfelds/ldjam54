@@ -1,10 +1,11 @@
 import h2d.col.IPoint;
 import h2d.col.Point;
+import motion.Actuate;
 
 class Utils {
 	public static function floatToStr(n:Float, prec = 3) {
 		n = Math.round(n * Math.pow(10, prec));
-		var str = '' + n;
+		var str = '' + n; // TODO: use string builder
 		var len = str.length;
 		if (len <= prec) {
 			while (len < prec) {
@@ -64,16 +65,42 @@ class Utils {
 	}
 
 	public static function distToLineSegment(p:Point, l0:Point, l1:Point) {
+		return p.distance(projectToLineSegment(p, l0, l1));
+	}
+
+	public static function projectToLineSegment(p:Point, l0:Point, l1:Point):Point {
 		// From https://stackoverflow.com/a/1501725/3810493
 		final d2 = l0.distanceSq(l1);
 		if (d2 == 0.0)
-			return p.distance(l0); // l0 == l1 case
+			return l0; // l0 == l1 case
 		// Consider the line extending the segment, parameterized as v + t (w - v).
 		// We find projection of point p onto the line.
 		// It falls where t = [(p-v) . (w-v)] / |w-v|^2
 		// We clamp t from [0,1] to handle points outside the segment vw.
 		final t = Math.max(0, Math.min(1, p.sub(l0).dot(l1.sub(l0)) / d2));
-		final projection = l0.add(l1.sub(l0).multiply(t)); // Projection falls on the segment
-		return p.distance(projection);
+		return l0.add(l1.sub(l0).multiply(t)); // Projection falls on the segment
+	}
+
+	public static function posUpdated(obj:h2d.Object) {
+		// Tween is not smart enough to call the setter.
+		obj.x = obj.x;
+	}
+
+	/** Tween for Heaps objects.
+		Careful with onComplete() as it might get dropped if the tween is overwritten. Use `after` instead.
+	**/
+	public static function tween(obj, time:Float, properties:Dynamic, overwrite = true, after = null) {
+		if (after != null) {
+			Actuate.timer(time).onComplete(after);
+		}
+		return Actuate.tween(obj, time, properties, overwrite).onUpdate(() -> posUpdated(obj)).onComplete(() -> posUpdated(obj));
+	}
+
+	public static function copyTransform(fromObj:h2d.Object, toObj:h2d.Object) {
+		toObj.x = fromObj.x;
+		toObj.y = fromObj.y;
+		toObj.scaleX = fromObj.scaleX;
+		toObj.scaleY = fromObj.scaleY;
+		toObj.rotation = fromObj.rotation;
 	}
 }
