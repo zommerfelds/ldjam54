@@ -35,7 +35,7 @@ git push -u origin main
 ### Building
 
 * Install dependencies: `haxelib install build-js.hxml`
-* Build the assets package: `bash run buildres`
+* Build the assets package: `bash run buildres` or `bash run buildres_py` (depending on your system setup)
 * Compile the project: `bash run compile` (or Ctrl+Shift+B in vscode)
 
 ## TODO
@@ -47,3 +47,4 @@ git push -u origin main
 
 * Sound generator: [jsfxr](https://sfxr.me/)
 * Music tool: [Bosca Ceoil download](https://boscaceoil.net/downloads/boscaceoil_win_v2.zip)
+* Level editor: [LDtk](https://ldtk.io/)
