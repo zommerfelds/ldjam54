@@ -6,16 +6,31 @@ A small Heaps project template for web-based games.
 
 ## Instructions
 
-### Setup
+### Prerequisites
 
 * Install [Haxe](https://haxe.org/)
 * Install [Git Bash](https://gitforwindows.org/) if you are on Windows
 * Optional: [install](https://github.com/HaxeFoundation/hashlink/wiki/Building-and-Installing) HashLink
 * Optional: install Python and livereload `pip install livereload`
 * Optional: install [Git LFS](https://git-lfs.github.com/)
-  * `git lfs install` once on the repo to set up
 * Optional: install Visual Studio Code
-* Optional: enable GitHub pages in the repto settings (`/settings/pages`)
+
+### Get the code
+
+Fork this repo.
+
+Or manually copy the repo to a new repo: https://github.com/new
+
+```
+git clone -o template https://github.com/zommerfelds/gamejam-template.git ldjamXX
+cd ldjamXX
+git lfs install
+git remote add origin https://github.com/zommerfelds/ldjamXX.git # replace zommerfelds by your username
+git branch -M main
+git push -u origin main
+```
+
+* Optional: enable GitHub pages in the repo settings (`/settings/pages`)
 
 ### Building
 
