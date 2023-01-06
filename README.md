@@ -48,3 +48,5 @@ git push -u origin main
 * Sound generator: [jsfxr](https://sfxr.me/)
 * Music tool: [Bosca Ceoil download](https://boscaceoil.net/downloads/boscaceoil_win_v2.zip)
 * Level editor: [LDtk](https://ldtk.io/)
+* AI generated music: https://ecrettmusic.com/
+* Generic tips and links: https://sharks-interactive.github.io/JamTips/
