@@ -8,20 +8,16 @@ enum State {
 }
 
 class PlayView extends GameState {
-	final playWidth = 9;
-	final playHeight = 16;
+	final playWidth = 16;
+	final playHeight = 10;
 
 	final gameArea = new h2d.Graphics();
-
-	final paddle = new h2d.Graphics();
-	final paddleWidth = 2;
-	final paddleHeight = 0.5;
 
 	final ball = new h2d.Graphics();
 	final ballSize = 0.5;
 	var ballVel = new Point();
 
-	final wallSize = 0.5;
+	final wallSize = 0.2;
 
 	var state = WaitingForTouch;
 
@@ -48,11 +44,9 @@ class PlayView extends GameState {
 		final wall = new h2d.Graphics(gameArea);
 		wall.beginFill(0xffffff);
 		wall.drawRect(0, 0, playWidth, wallSize);
-
-		paddle.beginFill(0xffffff);
-		paddle.drawRect(-paddleWidth / 2, 0, paddleWidth, paddleHeight);
-		paddle.y = playHeight * 0.8;
-		gameArea.addChild(paddle);
+		wall.drawRect(0, 0, wallSize, playHeight);
+		wall.drawRect(playWidth - wallSize, 0, wallSize, playHeight);
+		wall.drawRect(0, playHeight - wallSize, playWidth, wallSize);
 
 		ball.beginFill(0xffffff);
 		ball.drawRect(-ballSize / 2, -ballSize / 2, ballSize, ballSize);
@@ -62,25 +56,6 @@ class PlayView extends GameState {
 		pointsText.y = width * 0.02 + gameArea.y + wallSize * gameArea.scaleY;
 		pointsText.textAlign = Center;
 		this.addChild(pointsText);
-
-		resetText.text = "reset";
-		resetText.x = width - resetText.getBounds().width - width * 0.05;
-		resetText.y = width * 0.02 + gameArea.y + wallSize * gameArea.scaleY;
-		this.addChild(resetText);
-		resetInteractive.width = resetText.getBounds().width;
-		resetInteractive.height = resetText.getBounds().height;
-		resetInteractive.onClick = e -> {
-			setupGame();
-		};
-		resetText.addChild(resetInteractive);
-
-		final backText = new Gui.Text("&lt;-", this);
-		backText.x = width * 0.05;
-		backText.y = width * 0.02 + gameArea.y + wallSize * gameArea.scaleY;
-		final backInteractive = new h2d.Interactive(backText.getBounds().width, backText.getBounds().height, backText);
-		backInteractive.onClick = e -> {
-			App.instance.switchState(new MenuView());
-		};
 
 		setupGame();
 
@@ -95,9 +70,8 @@ class PlayView extends GameState {
 	function setupGame() {
 		resetText.visible = false;
 		points = 0;
-		paddle.x = playWidth / 2;
-		ball.x = paddle.x;
-		ball.y = paddle.y - ballSize / 2;
+		ball.x = 8;
+		ball.y = 8;
 		state = WaitingForTouch;
 	}
 
@@ -111,11 +85,10 @@ class PlayView extends GameState {
 				}
 			default:
 		}
-		paddle.x = (event.relX - gameArea.x) / gameArea.scaleX;
 	}
 
 	function setRandomBallVel() {
-		ballVel = new Point(0, -(10 + points));
+		ballVel = new Point(0, -(3 + points));
 		ballVel.rotate((Math.random() - 0.5) * Math.PI * 0.8);
 	}
 
@@ -128,37 +101,32 @@ class PlayView extends GameState {
 		ball.x += ballVel.x * dt;
 		ball.y += ballVel.y * dt;
 
-		if (ball.x - ballSize * 0.5 < 0) {
-			ball.x = ballSize * 0.5;
-			ballVel.x *= -1;
-			final s = hxd.Res.blip.play();
-		}
-		if (ball.x + ballSize * 0.5 > playWidth) {
-			ball.x = playWidth - ballSize * 0.5;
-			ballVel.x *= -1;
-			hxd.Res.blip.play();
-		}
 		if (ball.y - ballSize * 0.5 < wallSize) {
 			ball.y = wallSize + ballSize * 0.5;
 			ballVel.y *= -1;
 			points += 1;
-			if (App.loadHighScore() < points) {
-				App.writeHighScore(points);
-			}
 			hxd.Res.blip.play();
 		}
-		if (ball.y + ballSize * 0.5 > paddle.y) {
-			if (state == Playing && ball.x + ballSize > paddle.x - paddleWidth / 2 && ball.x - ballSize < paddle.x + paddleWidth / 2) {
-				ball.y = paddle.y - ballSize * 0.5;
-				setRandomBallVel();
-				hxd.Res.blip.play();
-			} else {
-				state = MissedBall;
-			}
+		if (ball.x - ballSize * 0.5 < wallSize) {
+			ball.x = wallSize + ballSize * 0.5;
+			ballVel.x *= -1;
+			points += 1;
+			hxd.Res.blip.play();
 		}
-		if (ball.y - ballSize * 0.5 > playHeight) {
-			state = Dead;
-			resetText.visible = true;
+		if (ball.x + ballSize * 0.5 > playWidth - wallSize) {
+			ball.x = playWidth - wallSize - ballSize * 0.5;
+			ballVel.x *= -1;
+			points += 1;
+			hxd.Res.blip.play();
+		}
+		if (ball.y + ballSize * 0.5 > playHeight - wallSize) {
+			ball.y = playHeight - wallSize - ballSize * 0.5;
+			ballVel.y *= -1;
+			points += 1;
+			hxd.Res.blip.play();
+		}
+		if (App.loadHighScore() < points) {
+			App.writeHighScore(points);
 		}
 	}
 }

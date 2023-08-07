@@ -2,5 +2,6 @@
 
 Live demo: https://zommerfelds.github.io/haxejam-summer-2023/
 
-Game jam: https://itch.io/jam/haxejam-2023-summer-jam
-Template: https://github.com/zommerfelds/gamejam-template
+Game jam site: https://itch.io/jam/haxejam-2023-summer-jam
+
+My game jam template: https://github.com/zommerfelds/gamejam-template
