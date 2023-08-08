@@ -1,0 +1,25 @@
+tasks:
+  - init: |
+      bash run buildres_py
+      echo -e "=========================================================\nPlease allow vscode tasks to run to start the application\nPress Ctrl+Shift+B then click "Allow and run"\n========================================================="
+      # NOTE: vshaxe doesn't seem to play that well with Gitpod. An alternative would be to start the language server manually and
+      #       do everything from here.
+      (sleep 5s; touch /workspace/started)&
+    command: |
+      code game/src/App.hx # This will make vscode load the Haxe plugin.
+      if test -f /workspace/started; then
+        echo -e "=========================================================\nThis is a workspace restart\nYou may need to run the server again with:\nCtrl+Shift+P -> Run task -> Serve dev version\n========================================================="
+      fi
+
+ports:
+  - port: 8000
+    onOpen: open-browser
+  - port: 6000
+    onOpen: ignore
+
+image:
+  file: .gitpod.Dockerfile
+
+vscode:
+  extensions:
+    - nadako.vshaxe
