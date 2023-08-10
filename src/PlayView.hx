@@ -27,6 +27,15 @@ class PlayView extends GameState {
 	final resetText = new Gui.Text("");
 	final resetInteractive = new h2d.Interactive(0, 0);
 
+	final wallDefitition = [
+		new Point(1,1),
+		new Point(12, 3),
+		new Point(15, 9),
+		new Point(6, 9),
+		new Point(5, 7),
+		new Point(2, 9),
+	];
+
 	override function init() {
 		if (height / width > playHeight / playWidth) {
 			// Width is limiting factor
@@ -47,6 +56,13 @@ class PlayView extends GameState {
 		wall.drawRect(0, 0, wallSize, playHeight);
 		wall.drawRect(playWidth - wallSize, 0, wallSize, playHeight);
 		wall.drawRect(0, playHeight - wallSize, playWidth, wallSize);
+
+		final walls = new h2d.Graphics(gameArea);
+		walls.lineStyle(wallSize, 0xffffff);
+		for (def in wallDefitition) {
+			walls.lineTo(def.x, def.y);
+		}
+		walls.lineTo(wallDefitition[0].x, wallDefitition[0].y);
 
 		ball.beginFill(0xffffff);
 		ball.drawRect(-ballSize / 2, -ballSize / 2, ballSize, ballSize);
