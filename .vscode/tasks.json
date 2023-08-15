@@ -31,7 +31,10 @@
 		{
 			"label": "Open Chrome",
 			"type": "shell",
-			"command": "start chrome -ArgumentList --autoplay-policy=no-user-gesture-required,--user-data-dir=C:\\chrome-dev-profile-hexislands,http://localhost:8000/",
+			"command": "echo Not Windows: skip starting Chrome",
+			"windows": {
+				"command": "start chrome -ArgumentList --autoplay-policy=no-user-gesture-required,--user-data-dir=C:\\chrome-dev-profile-hexislands,http://localhost:8000/",
+			},
 			"presentation": {
 				"reveal": "always",
 				"panel": "new"

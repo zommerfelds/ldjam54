@@ -9,4 +9,4 @@ RUN sudo add-apt-repository ppa:haxe/releases -y \
 RUN pip install livereload
 
 COPY --chown=gitpod:gitpod build-js.hxml /tmp
-RUN mkdir -p ~/haxelib && haxelib setup ~/haxelib && yes | haxelib --quiet install /tmp/build-js.hxml
+RUN mkdir -p ~/haxelib && haxelib setup ~/haxelib && yes | haxelib --quiet --always install /tmp/build-js.hxml
