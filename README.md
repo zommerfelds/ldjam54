@@ -1,9 +1,7 @@
-# Cancelled: I didn't have time to participate :(
+# My entry for 1-BIT JAM 2023
 
-## My entry for HaxeJam 2023: Summer Jam
+Live demo: https://zommerfelds.github.io/1-bit-jam-2023/
 
-Live demo: https://zommerfelds.github.io/haxejam-summer-2023/
-
-Game jam site: https://itch.io/jam/haxejam-2023-summer-jam
+Game jam site: https://itch.io/jam/1-bit-jam-wow
 
 My game jam template: https://github.com/zommerfelds/gamejam-template
