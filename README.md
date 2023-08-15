@@ -1,4 +1,6 @@
-# My entry for HaxeJam 2023: Summer Jam
+# Cancelled: I didn't have time to participate :(
+
+## My entry for HaxeJam 2023: Summer Jam
 
 Live demo: https://zommerfelds.github.io/haxejam-summer-2023/
 
