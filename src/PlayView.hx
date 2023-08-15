@@ -56,7 +56,7 @@ class PlayView extends GameState {
 			gameArea.scale(height / playHeight);
 			gameArea.x = (width - playWidth * gameArea.scaleX) / 2;
 		}
-		gameArea.beginFill(0x330000);
+		gameArea.beginFill(0x3B32B4);
 		gameArea.drawRect(0, 0, playWidth, playHeight);
 		addChild(gameArea);
 
