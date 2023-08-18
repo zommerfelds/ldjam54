@@ -12,17 +12,17 @@ enum State {
 	Dead;
 }
 
+enum Cell {
+	Empty;
+	Locked;
+	Falling;
+}
+
 class PlayView extends GameState {
 	final playWidth = 16;
 	final playHeight = 10;
 
 	final gameArea = new h2d.Graphics();
-
-	final ball = new h2d.Graphics();
-	final ballSize = 0.5;
-	var ballVel = new Point();
-
-	final wallSize = 0.2;
 
 	var state = WaitingForTouch;
 
@@ -32,13 +32,17 @@ class PlayView extends GameState {
 	final resetText = new Gui.Text("");
 	final resetInteractive = new h2d.Interactive(0, 0);
 
-	final wallDefitition = [
-		new Point(1, 1),
-		new Point(12, 3),
-		new Point(15, 9),
-		new Point(6, 9),
-		new Point(5, 7),
-		new Point(2, 9),
+	var timeSinceLastUpdate = 0.0;
+
+	static final BOARD_WIDTH = 16;
+
+	static final BOARD_HEIGHT = 10;
+
+	final grid:Array<Array<Cell>> = [
+		for (x in 0...BOARD_WIDTH) [
+			for (y in 0...BOARD_HEIGHT)
+				Empty
+		]
 	];
 
 	static final BOX2D_VELOCITY_ITERATIONS = 8;
@@ -56,18 +60,10 @@ class PlayView extends GameState {
 			gameArea.scale(height / playHeight);
 			gameArea.x = (width - playWidth * gameArea.scaleX) / 2;
 		}
-		gameArea.beginFill(0x3B32B4);
-		gameArea.drawRect(0, 0, playWidth, playHeight);
 		addChild(gameArea);
 
-		initWalls();
-
-		ball.beginFill(0xffffff);
-		ball.drawRect(-ballSize / 2, -ballSize / 2, ballSize, ballSize);
-		gameArea.addChild(ball);
-
 		pointsText.x = width * 0.5;
-		pointsText.y = width * 0.02 + gameArea.y + wallSize * gameArea.scaleY;
+		pointsText.y = width * 0.02 + gameArea.y + 1 * gameArea.scaleY;
 		pointsText.textAlign = Center;
 		this.addChild(pointsText);
 
@@ -81,30 +77,15 @@ class PlayView extends GameState {
 		manager.masterChannelGroup.addEffect(new hxd.snd.effect.Pitch(0.5));
 	}
 
-	function initWalls() {
-		final walls = new h2d.Graphics(gameArea);
-		walls.lineStyle(wallSize, 0xffffff);
-		final bodyDef = new B2BodyDef();
-		final body = b2World.createBody(bodyDef);
-
-		for (def in wallDefitition) {
-			walls.lineTo(def.x, def.y);
-		}
-		walls.lineTo(wallDefitition[0].x, wallDefitition[0].y);
-
-		for (i in 0...wallDefitition.length - 1) {
-			final fixture = new B2FixtureDef();
-			fixture.density = 1;
-			fixture.shape = new B2EdgeShape(toB2Vec2(wallDefitition[i]), toB2Vec2(wallDefitition[i + 1]));
-		}
-	}
-
 	function setupGame() {
 		resetText.visible = false;
 		points = 0;
-		ball.x = 8;
-		ball.y = 8;
 		state = WaitingForTouch;
+		grid[2][2] = Falling;
+		grid[2][3] = Falling;
+		grid[2][4] = Falling;
+		grid[3][4] = Falling;
+		grid[3][8] = Locked;
 	}
 
 	function onEvent(event:hxd.Event) {
@@ -112,16 +93,10 @@ class PlayView extends GameState {
 			case EPush:
 				if (state == WaitingForTouch) {
 					state = Playing;
-					setRandomBallVel();
 					hxd.Res.start.play();
 				}
 			default:
 		}
-	}
-
-	function setRandomBallVel() {
-		ballVel = new Point(0, -(3 + points));
-		ballVel.rotate((Math.random() - 0.5) * Math.PI * 0.8);
 	}
 
 	override function update(dt:Float) {
@@ -132,40 +107,56 @@ class PlayView extends GameState {
 		// https://stackoverflow.com/a/14495543/3810493
 		b2World.clearForces();
 
+		timeSinceLastUpdate += dt;
+
+		final step = 0.5;
+		while (timeSinceLastUpdate > step) {
+			timeSinceLastUpdate -= step;
+			tick();
+		}
+
+		gameArea.clear();
+		gameArea.beginFill(0x3B32B4);
+		gameArea.drawRect(0, 0, playWidth, playHeight);
+
+		for (x in 0...BOARD_WIDTH) {
+			for (y in 0...BOARD_HEIGHT) {
+				switch (grid[x][y]) {
+					case Falling:
+						gameArea.beginFill(0x34BE79);
+						gameArea.drawRect(x, y, 1, 1);
+					case Locked:
+						gameArea.beginFill(0xB827A5);
+						gameArea.drawRect(x, y, 1, 1);
+					case Empty:
+				}
+			}
+		}
+
 		pointsText.text = "" + points;
 
 		if (state == WaitingForTouch || state == Dead)
 			return;
 
-		ball.x += ballVel.x * dt;
-		ball.y += ballVel.y * dt;
-
-		if (ball.y - ballSize * 0.5 < wallSize) {
-			ball.y = wallSize + ballSize * 0.5;
-			ballVel.y *= -1;
-			points += 1;
-			hxd.Res.blip.play();
-		}
-		if (ball.x - ballSize * 0.5 < wallSize) {
-			ball.x = wallSize + ballSize * 0.5;
-			ballVel.x *= -1;
-			points += 1;
-			hxd.Res.blip.play();
-		}
-		if (ball.x + ballSize * 0.5 > playWidth - wallSize) {
-			ball.x = playWidth - wallSize - ballSize * 0.5;
-			ballVel.x *= -1;
-			points += 1;
-			hxd.Res.blip.play();
-		}
-		if (ball.y + ballSize * 0.5 > playHeight - wallSize) {
-			ball.y = playHeight - wallSize - ballSize * 0.5;
-			ballVel.y *= -1;
-			points += 1;
-			hxd.Res.blip.play();
-		}
 		if (App.loadHighScore() < points) {
 			App.writeHighScore(points);
+		}
+	}
+
+	function tick() {
+		for (x in 0...BOARD_WIDTH) {
+			var y = BOARD_HEIGHT - 1;
+			while (y >= 0) {
+				if (grid[x][y] == Falling) {
+					if (y == BOARD_HEIGHT - 1 || grid[x][y + 1] == Locked) {
+						grid[x][y] = Locked;
+					} else {
+						grid[x][y + 1] = Falling;
+						grid[x][y] = Empty;
+					}
+				}
+				y--;
+			}
 		}
 	}
 
