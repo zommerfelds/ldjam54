@@ -1,3 +1,5 @@
+import haxe.ds.StringMap;
+import ldtk.Json.EntityReferenceInfos;
 import h2d.Flow;
 import LdtkProject.Ldtk;
 import Gui.TextButton;
@@ -11,6 +13,8 @@ import haxe.ds.HashMap;
 enum Cell {
 	Empty;
 	Wall;
+	Door;
+	Switch(targets:Array<EntityReferenceInfos>);
 	Slime(groupId:Int);
 	Exit;
 }
@@ -36,6 +40,8 @@ class PlayView extends GameState {
 	final ldtkLevel:Null<LdtkProject.LdtkProject_Level>;
 	final levelIndex:Int;
 
+	final targetEntities = new StringMap<IPoint>();
+
 	var timeSinceLastUpdate = 0.0;
 
 	public function new(level:Int) {
@@ -44,7 +50,9 @@ class PlayView extends GameState {
 		ldtkLevel = Ldtk.world.levels[level];
 	}
 
-	static final FREE_CELLS = [Empty, Exit];
+	static function isFree(cell:Cell) {
+		return cell.match(Empty | Exit | Switch(_));
+	}
 
 	override function init() {
 		if (height / width > BOARD_HEIGHT / BOARD_WIDTH) {
@@ -104,6 +112,17 @@ class PlayView extends GameState {
 					case x:
 						throw 'invalid case $x';
 				}
+			}
+		}
+
+		for (entity in ldtkLevel.l_Entities.getAllUntyped()) {
+			switch (entity.entityType) {
+				case Switch:
+					final switchEntity:LdtkProject.Entity_Switch = cast entity;
+					grid[entity.cx][entity.cy] = Switch(switchEntity.f_Targets);
+				case Door:
+					grid[entity.cx][entity.cy] = Door;
+					targetEntities.set(entity.iid, new IPoint(entity.cx, entity.cy));
 			}
 		}
 
@@ -171,7 +190,7 @@ class PlayView extends GameState {
 		final newPos = playerPos.add(diff);
 		final slimesToBeAdded = [];
 		for (p in playerGrid.keys()) {
-			if (!isPointInBoard(newPos.add(Utils.toIPoint(p))) || !FREE_CELLS.contains(grid[newPos.x + p.x][newPos.y + p.y])) {
+			if (!isPointInBoard(newPos.add(Utils.toIPoint(p))) || !isFree(grid[newPos.x + p.x][newPos.y + p.y])) {
 				return;
 			}
 			if (isPointInBoard(newPos.add(Utils.toIPoint(p)).add(diff))) {
@@ -183,8 +202,20 @@ class PlayView extends GameState {
 					case _:
 				}
 			}
-			if (grid[newPos.x + p.x][newPos.y + p.y] == Exit) {
-				win();
+			switch (grid[newPos.x + p.x][newPos.y + p.y]) {
+				case Exit:
+					win();
+				case Switch(targets):
+					for (t in targets) {
+						final pt = targetEntities.get(t.entityIid);
+						switch (grid[pt.x][pt.y]) {
+							case Door:
+								grid[pt.x][pt.y] = Empty;
+							case x:
+								trace('WARNING: invalid target type $x');
+						}
+					}
+				case _:
 			}
 		}
 		for (s in slimesToBeAdded) {
@@ -204,7 +235,7 @@ class PlayView extends GameState {
 		}
 
 		gameArea.clear();
-		gameArea.beginFill(0x716CB3);
+		gameArea.beginFill(0xBFBBFF);
 		gameArea.drawRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
 
 		for (x in 0...BOARD_WIDTH) {
@@ -215,6 +246,12 @@ class PlayView extends GameState {
 						gameArea.drawRect(x, y, 1, 1);
 					case Wall:
 						gameArea.beginFill(0x3B3B3B);
+						gameArea.drawRect(x, y, 1, 1);
+					case Door:
+						gameArea.beginFill(0x927232);
+						gameArea.drawRect(x, y, 1, 1);
+					case Switch(_):
+						gameArea.beginFill(0xB51010);
 						gameArea.drawRect(x, y, 1, 1);
 					case Empty:
 					case Exit:
