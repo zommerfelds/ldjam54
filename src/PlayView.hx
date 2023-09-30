@@ -11,20 +11,18 @@ import haxe.ds.HashMap;
 enum Cell {
 	Empty;
 	Wall;
-	Slime;
+	Slime(groupId:Int);
 	Exit;
 }
 
 class PlayView extends GameState {
-	final gameArea = new h2d.Graphics();
-	var playerPos = new IPoint();
-	final playerGrid = new HashMap<Point2d, Bool>();
-
-	var timeSinceLastUpdate = 0.0;
-
 	static final BOARD_WIDTH = 12;
 
 	static final BOARD_HEIGHT = 18;
+
+	final gameArea = new h2d.Graphics();
+	var playerPos = new IPoint();
+	final playerGrid = new HashMap<Point2d, Bool>();
 
 	final grid:Array<Array<Cell>> = [
 		for (x in 0...BOARD_WIDTH) [
@@ -33,8 +31,12 @@ class PlayView extends GameState {
 		]
 	];
 
+	final slimeGroups:Array<Array<IPoint>> = [];
+
 	final ldtkLevel:Null<LdtkProject.LdtkProject_Level>;
 	final levelIndex:Int;
+
+	var timeSinceLastUpdate = 0.0;
 
 	public function new(level:Int) {
 		super();
@@ -92,7 +94,7 @@ class PlayView extends GameState {
 					case "Wall":
 						grid[x][y] = Wall;
 					case "Slime":
-						grid[x][y] = Slime;
+						grid[x][y] = Slime(-1);
 					case "Exit":
 						grid[x][y] = Exit;
 					case "Player":
@@ -101,6 +103,35 @@ class PlayView extends GameState {
 					// empty field
 					case x:
 						throw 'invalid case $x';
+				}
+			}
+		}
+
+		makeSlimeGroups();
+	}
+
+	function makeSlimeGroups() {
+		function floodFill(x, y, groupId) {
+			if (!grid[x][y].match(Slime(-1)))
+				return;
+			grid[x][y] = Slime(groupId);
+			slimeGroups[groupId].push(new IPoint(x, y));
+			final dirs = [new IPoint(0, 1), new IPoint(0, -1), new IPoint(1, 0), new IPoint(-1, 0)];
+			for (d in dirs) {
+				if (!isPointInBoard(d))
+					continue;
+				floodFill(x + d.x, y + d.y, groupId);
+			}
+		}
+
+		for (x in 0...BOARD_WIDTH) {
+			for (y in 0...BOARD_HEIGHT) {
+				switch (grid[x][y]) {
+					case Slime(-1):
+						slimeGroups.push([]);
+						floodFill(x, y, slimeGroups.length - 1);
+					case Slime(_):
+					case _:
 				}
 			}
 		}
@@ -143,9 +174,14 @@ class PlayView extends GameState {
 			if (!isPointInBoard(newPos.add(Utils.toIPoint(p))) || !FREE_CELLS.contains(grid[newPos.x + p.x][newPos.y + p.y])) {
 				return;
 			}
-			if (isPointInBoard(newPos.add(Utils.toIPoint(p)).add(diff))
-				&& grid[newPos.x + p.x + diff.x][newPos.y + p.y + diff.y] == Slime) {
-				slimesToBeAdded.push(new IPoint(p.x + diff.x, p.y + diff.y));
+			if (isPointInBoard(newPos.add(Utils.toIPoint(p)).add(diff))) {
+				switch (grid[newPos.x + p.x + diff.x][newPos.y + p.y + diff.y]) {
+					case Slime(groupId):
+						for (s in slimeGroups[groupId]) {
+							slimesToBeAdded.push(new IPoint(s.x - newPos.x, s.y - newPos.y));
+						}
+					case _:
+				}
 			}
 			if (grid[newPos.x + p.x][newPos.y + p.y] == Exit) {
 				win();
@@ -174,7 +210,7 @@ class PlayView extends GameState {
 		for (x in 0...BOARD_WIDTH) {
 			for (y in 0...BOARD_HEIGHT) {
 				switch (grid[x][y]) {
-					case Slime:
+					case Slime(_):
 						gameArea.beginFill(0x22593D);
 						gameArea.drawRect(x, y, 1, 1);
 					case Wall:
