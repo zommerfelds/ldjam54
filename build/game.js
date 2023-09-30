@@ -398,7 +398,25 @@ App.main = function() {
 App.__super__ = HerbalTeaApp;
 App.prototype = $extend(HerbalTeaApp.prototype,{
 	onload: function() {
-		this.switchState(new PlayView(0));
+		var params = new URLSearchParams(window.location.search);
+		var view;
+		var _g = params.get("start");
+		if(_g == null) {
+			view = new MenuView();
+		} else {
+			switch(_g) {
+			case "menu":
+				view = new MenuView();
+				break;
+			case "play":
+				var levelIndex = params.get("level") == null ? 0 : Std.parseInt(params.get("level"));
+				view = new PlayView(levelIndex);
+				break;
+			default:
+				throw haxe_Exception.thrown("invavid \"start\" query param \"" + _g + "\"");
+			}
+		}
+		this.switchState(view);
 	}
 	,__class__: App
 });
@@ -4698,12 +4716,14 @@ MenuView.prototype = $extend(GameState.prototype,{
 var Cell = $hxEnums["Cell"] = { __ename__:true,__constructs__:null
 	,Empty: {_hx_name:"Empty",_hx_index:0,__enum__:"Cell",toString:$estr}
 	,Wall: {_hx_name:"Wall",_hx_index:1,__enum__:"Cell",toString:$estr}
-	,Slime: {_hx_name:"Slime",_hx_index:2,__enum__:"Cell",toString:$estr}
+	,Slime: ($_=function(groupId) { return {_hx_index:2,groupId:groupId,__enum__:"Cell",toString:$estr}; },$_._hx_name="Slime",$_.__params__ = ["groupId"],$_)
 	,Exit: {_hx_name:"Exit",_hx_index:3,__enum__:"Cell",toString:$estr}
 };
 Cell.__constructs__ = [Cell.Empty,Cell.Wall,Cell.Slime,Cell.Exit];
-Cell.__empty_constructs__ = [Cell.Empty,Cell.Wall,Cell.Slime,Cell.Exit];
+Cell.__empty_constructs__ = [Cell.Empty,Cell.Wall,Cell.Exit];
 var PlayView = function(level) {
+	this.timeSinceLastUpdate = 0.0;
+	this.slimeGroups = [];
 	var _g = [];
 	var _g1 = 0;
 	var _g2 = PlayView.BOARD_WIDTH;
@@ -4719,7 +4739,6 @@ var PlayView = function(level) {
 		_g.push(_g3);
 	}
 	this.grid = _g;
-	this.timeSinceLastUpdate = 0.0;
 	this.playerGrid = new haxe_ds__$HashMap_HashMapData();
 	this.playerPos = new h2d_col_IPoint();
 	this.gameArea = new h2d_Graphics();
@@ -4815,13 +4834,53 @@ PlayView.prototype = $extend(GameState.prototype,{
 						_this4.h[key1] = true;
 						break;
 					case "Slime":
-						this.grid[x][y] = Cell.Slime;
+						this.grid[x][y] = Cell.Slime(-1);
 						break;
 					case "Wall":
 						this.grid[x][y] = Cell.Wall;
 						break;
 					default:
 						throw haxe_Exception.thrown("invalid case " + _g4);
+					}
+				}
+			}
+		}
+		this.makeSlimeGroups();
+	}
+	,makeSlimeGroups: function() {
+		var _gthis = this;
+		var floodFill = null;
+		floodFill = function(x,y,groupId) {
+			var _g = _gthis.grid[x][y];
+			if(!(_g._hx_index == 2 && _g.groupId == -1)) {
+				return;
+			}
+			_gthis.grid[x][y] = Cell.Slime(groupId);
+			_gthis.slimeGroups[groupId].push(new h2d_col_IPoint(x,y));
+			var dirs = [new h2d_col_IPoint(0,1),new h2d_col_IPoint(0,-1),new h2d_col_IPoint(1,0),new h2d_col_IPoint(-1,0)];
+			var _g = 0;
+			while(_g < dirs.length) {
+				var d = dirs[_g];
+				++_g;
+				if(!_gthis.isPointInBoard(d)) {
+					continue;
+				}
+				floodFill(x + d.x,y + d.y,groupId);
+			}
+		};
+		var _g = 0;
+		var _g1 = PlayView.BOARD_WIDTH;
+		while(_g < _g1) {
+			var x = _g++;
+			var _g2 = 0;
+			var _g3 = PlayView.BOARD_HEIGHT;
+			while(_g2 < _g3) {
+				var y = _g2++;
+				var _g4 = this.grid[x][y];
+				if(_g4._hx_index == 2) {
+					if(_g4.groupId == -1) {
+						this.slimeGroups.push([]);
+						floodFill(x,y,this.slimeGroups.length - 1);
 					}
 				}
 			}
@@ -4880,8 +4939,17 @@ PlayView.prototype = $extend(GameState.prototype,{
 			if(x == null) {
 				x = 0;
 			}
-			if(this.isPointInBoard(new h2d_col_IPoint(x + diff.x,y + diff.y)) && this.grid[newPos.x + p1.x + diff.x][newPos.y + p1.y + diff.y] == Cell.Slime) {
-				slimesToBeAdded.push(new h2d_col_IPoint(p1.x + diff.x,p1.y + diff.y));
+			if(this.isPointInBoard(new h2d_col_IPoint(x + diff.x,y + diff.y))) {
+				var _g = this.grid[newPos.x + p1.x + diff.x][newPos.y + p1.y + diff.y];
+				if(_g._hx_index == 2) {
+					var _g1 = 0;
+					var _g2 = this.slimeGroups[_g.groupId];
+					while(_g1 < _g2.length) {
+						var s = _g2[_g1];
+						++_g1;
+						slimesToBeAdded.push(new h2d_col_IPoint(s.x - newPos.x,s.y - newPos.y));
+					}
+				}
 			}
 			if(this.grid[newPos.x + p1.x][newPos.y + p1.y] == Cell.Exit) {
 				this.win();
