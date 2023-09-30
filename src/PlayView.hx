@@ -1,20 +1,22 @@
+import haxe.ds.IntMap;
 import haxe.ds.StringMap;
 import ldtk.Json.EntityReferenceInfos;
 import h2d.Flow;
 import LdtkProject.Ldtk;
 import Gui.TextButton;
-import Gui.Button;
 import h2d.col.IPoint;
 import haxe.ds.Option;
 import hxd.Key;
 import Utils.Point2d;
 import haxe.ds.HashMap;
 
+using hx.strings.Strings;
+
 enum Cell {
 	Empty;
 	Wall;
 	Door;
-	Switch(targets:Array<EntityReferenceInfos>);
+	Switch(groupId:Int);
 	Slime(groupId:Int);
 	Exit;
 }
@@ -36,6 +38,7 @@ class PlayView extends GameState {
 	];
 
 	final slimeGroups:Array<Array<IPoint>> = [];
+	final switchGroups = new IntMap<{numSwitches:Int, targets:Array<EntityReferenceInfos>}>();
 
 	final ldtkLevel:Null<LdtkProject.LdtkProject_Level>;
 	final levelIndex:Int;
@@ -116,13 +119,20 @@ class PlayView extends GameState {
 		}
 
 		for (entity in ldtkLevel.l_Entities.getAllUntyped()) {
+			final pos = new IPoint(entity.cx, entity.cy);
 			switch (entity.entityType) {
 				case Switch:
 					final switchEntity:LdtkProject.Entity_Switch = cast entity;
-					grid[entity.cx][entity.cy] = Switch(switchEntity.f_Targets);
+					final groupId = switchEntity.f_Group ?? -switchEntity.iid.hashCode();
+					grid[entity.cx][entity.cy] = Switch(groupId);
+					if (switchGroups.get(groupId) == null) {
+						switchGroups.set(groupId, {numSwitches: 0, targets: []});
+					}
+					switchGroups.get(groupId).numSwitches++;
+					switchGroups.get(groupId).targets = switchGroups.get(groupId).targets.concat(switchEntity.f_Targets);
 				case Door:
 					grid[entity.cx][entity.cy] = Door;
-					targetEntities.set(entity.iid, new IPoint(entity.cx, entity.cy));
+					targetEntities.set(entity.iid, pos);
 			}
 		}
 
@@ -205,16 +215,6 @@ class PlayView extends GameState {
 			switch (grid[newPos.x + p.x][newPos.y + p.y]) {
 				case Exit:
 					win();
-				case Switch(targets):
-					for (t in targets) {
-						final pt = targetEntities.get(t.entityIid);
-						switch (grid[pt.x][pt.y]) {
-							case Door:
-								grid[pt.x][pt.y] = Empty;
-							case x:
-								trace('WARNING: invalid target type $x');
-						}
-					}
 				case _:
 			}
 		}
@@ -223,6 +223,38 @@ class PlayView extends GameState {
 			grid[newPos.x + s.x][newPos.y + s.y] = Empty;
 		}
 		playerPos = newPos;
+		checkSwitches();
+	}
+
+	function checkSwitches() {
+		final touchedGroups = new IntMap<Int>();
+		for (p in playerGrid.keys()) {
+			switch (grid[playerPos.x + p.x][playerPos.y + p.y]) {
+				case Switch(groupId):
+					if (touchedGroups.get(groupId) == null) {
+						touchedGroups.set(groupId, 0);
+					}
+					touchedGroups.set(groupId, touchedGroups.get(groupId) + 1);
+				case _:
+			}
+		}
+		for (t in touchedGroups.keyValueIterator()) {
+			if (switchGroups.get(t.key).numSwitches == t.value) {
+				activateSwitch(t.key);
+			}
+		}
+	}
+
+	function activateSwitch(groupId) {
+		for (t in switchGroups.get(groupId).targets) {
+			final pt = targetEntities.get(t.entityIid);
+			switch (grid[pt.x][pt.y]) {
+				case Door:
+					grid[pt.x][pt.y] = Empty;
+				case x:
+					trace('WARNING: invalid target type $x');
+			}
+		}
 	}
 
 	override function update(dt:Float) {

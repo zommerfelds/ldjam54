@@ -11,6 +11,8 @@
 -lib ldtk-haxe-api:1.3.3-rc.1
 -lib deepnightLibs:1.0.77
 
+-lib haxe-strings:7.0.3
+
 -D js-source-map
 -D no-deprecation-warnings
 
