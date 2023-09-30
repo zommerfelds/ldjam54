@@ -1,3 +1,5 @@
+import LdtkProject.Ldtk;
+
 class MenuView extends GameState {
 	override function init() {
 		final centeringFlow = new h2d.Flow(this);
@@ -19,9 +21,19 @@ class MenuView extends GameState {
 			HerbalTeaApp.toggleFullScreen();
 			centeringFlow.reflow();
 		}, Gui.Colors.BLUE, 0.8);
-		new Gui.TextButton(centeringFlow, "Start game", () -> {
-			App.instance.switchState(new PlayView());
-		}, Gui.Colors.BLUE, 0.8);
+
+		final levels = new h2d.Flow(centeringFlow);
+		levels.overflow = Limit;
+		levels.multiline = true;
+		levels.maxWidth = Std.int(centeringFlow.maxWidth * 0.8);
+		levels.horizontalAlign = Middle;
+		levels.horizontalSpacing = Gui.scaleAsInt(10);
+		levels.verticalSpacing = Gui.scaleAsInt(10);
+		for (i in 0...Ldtk.proj.all_worlds.Default.levels.length) {
+			new Gui.TextButton(levels, "L" + i, () -> {
+				App.instance.switchState(new PlayView(i));
+			}, Gui.Colors.BLUE, 0.8);
+		}
 
 		// new Gui.Text("Highscore: " + App.loadHighScore(), centeringFlow, 0.8);
 

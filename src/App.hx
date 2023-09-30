@@ -8,7 +8,7 @@ class App extends HerbalTeaApp {
 	override function onload() {
 		// TODO: load the menu when the game is ready:
 		// switchState(new MenuView());
-		switchState(new PlayView());
+		switchState(new PlayView(0));
 	}
 
 	// TODO: move this to HerbalTeaApp

@@ -62,18 +62,27 @@ class HerbalTeaApp extends hxd.App {
 			if (node.isDirectory) {
 				preloadResourcesRec(node);
 			} else {
-				switch (node.path.substr(node.path.length - 4).toLowerCase()) {
-					case ".png":
-						hxd.Res.load(node.path).toTexture();
-					case ".wav" | ".mp3":
-						hxd.Res.load(node.path).toSound().getData();
-					case ".fnt":
-					// Texture file is already loaded via png. Actual font building can't be done
-					// since we don't know if it's a normal font or SDF. Skip this case.
-					case ".txt":
-					// No preloading needed.
-					case x:
-						throw 'Error loading resource "${node.name}" (unidentified type "$x")';
+				final extension = ~/^.*\.(\w+)$/;
+				if (extension.match(node.path)) {
+					switch (extension.matched(1).toLowerCase()) {
+						case "png":
+							hxd.Res.load(node.path).toTexture();
+						case "wav" | "mp3":
+							hxd.Res.load(node.path).toSound().getData();
+						case "fnt":
+						// Texture file is already loaded via png. Actual font building can't be done
+						// since we don't know if it's a normal font or SDF. Skip this case.
+						case "ldtk":
+						// It seems like LDtk files are loaded on demand by the library. So we don't do anything now.
+						// I'm not sure if the file is really needed though, as some things seems to be stored at runtime.
+						// https://github.com/deepnight/ldtk-haxe-api/issues/20
+						case "txt":
+						// no preloading needed.
+						case x:
+							throw 'HebalTea: Error loading resource "${node.name}" (unidentified extension "$x")';
+					}
+				} else {
+					throw 'Error loading resource "${node.name}" (no extension in "${node.path}")';
 				}
 			}
 		}
