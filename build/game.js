@@ -4246,13 +4246,13 @@ ldtk_Project.prototype = {
 	,__class__: ldtk_Project
 };
 var LdtkProject = function(overrideEmbedJson) {
-	this.toc = { };
+	this.toc = { Switch : [], Door : []};
 	this.all_worlds = { Default : null};
 	ldtk_Project.call(this);
 	this._enumTypePrefix = "Enum_";
 	this.projectDir = "res/heaps";
 	this.projectFilePath = "res/heaps/map.ldtk";
-	this.parseJson(overrideEmbedJson != null ? overrideEmbedJson : "{\n\t\"__header__\": {\n\t\t\"fileType\": \"LDtk Project JSON\",\n\t\t\"app\": \"LDtk\",\n\t\t\"doc\": \"https://ldtk.io/json\",\n\t\t\"schema\": \"https://ldtk.io/files/JSON_SCHEMA.json\",\n\t\t\"appAuthor\": \"Sebastien 'deepnight' Benard\",\n\t\t\"appVersion\": \"1.4.1\",\n\t\t\"url\": \"https://ldtk.io\"\n\t},\n\t\"iid\": \"ec4f3a30-3b70-11ee-8c17-c341fb10f971\",\n\t\"jsonVersion\": \"1.4.1\",\n\t\"appBuildId\": 471015,\n\t\"nextUid\": 6,\n\t\"identifierStyle\": \"Capitalize\",\n\t\"toc\": [],\n\t\"worldLayout\": \"LinearHorizontal\",\n\t\"worldGridWidth\": 256,\n\t\"worldGridHeight\": 256,\n\t\"defaultLevelWidth\": 192,\n\t\"defaultLevelHeight\": 288,\n\t\"defaultPivotX\": 0,\n\t\"defaultPivotY\": 0,\n\t\"defaultGridSize\": 16,\n\t\"defaultEntityWidth\": 16,\n\t\"defaultEntityHeight\": 16,\n\t\"bgColor\": \"#40465B\",\n\t\"defaultLevelBgColor\": \"#696A79\",\n\t\"minifyJson\": false,\n\t\"externalLevels\": false,\n\t\"exportTiled\": false,\n\t\"simplifiedExport\": false,\n\t\"imageExportMode\": \"None\",\n\t\"exportLevelBg\": true,\n\t\"pngFilePattern\": null,\n\t\"backupOnSave\": false,\n\t\"backupLimit\": 10,\n\t\"backupRelPath\": null,\n\t\"levelNamePattern\": \"Level_%idx\",\n\t\"tutorialDesc\": null,\n\t\"customCommands\": [],\n\t\"flags\": [],\n\t\"defs\": { \"layers\": [\n\t\t{\n\t\t\t\"__type\": \"IntGrid\",\n\t\t\t\"identifier\": \"IntGrid\",\n\t\t\t\"type\": \"IntGrid\",\n\t\t\t\"uid\": 3,\n\t\t\t\"doc\": null,\n\t\t\t\"uiColor\": null,\n\t\t\t\"gridSize\": 16,\n\t\t\t\"guideGridWid\": 0,\n\t\t\t\"guideGridHei\": 0,\n\t\t\t\"displayOpacity\": 1,\n\t\t\t\"inactiveOpacity\": 1,\n\t\t\t\"hideInList\": false,\n\t\t\t\"hideFieldsWhenInactive\": false,\n\t\t\t\"canSelectWhenInactive\": true,\n\t\t\t\"renderInWorldView\": true,\n\t\t\t\"pxOffsetX\": 0,\n\t\t\t\"pxOffsetY\": 0,\n\t\t\t\"parallaxFactorX\": 0,\n\t\t\t\"parallaxFactorY\": 0,\n\t\t\t\"parallaxScaling\": true,\n\t\t\t\"requiredTags\": [],\n\t\t\t\"excludedTags\": [],\n\t\t\t\"intGridValues\": [\n\t\t\t\t{ \"value\": 1, \"identifier\": \"Wall\", \"color\": \"#343434\", \"tile\": null, \"groupUid\": 0 },\n\t\t\t\t{ \"value\": 2, \"identifier\": \"Slime\", \"color\": \"#42FF00\", \"tile\": null, \"groupUid\": 0 },\n\t\t\t\t{ \"value\": 3, \"identifier\": \"Exit\", \"color\": \"#FFFFFF\", \"tile\": null, \"groupUid\": 0 },\n\t\t\t\t{ \"value\": 4, \"identifier\": \"Player\", \"color\": \"#FAFF00\", \"tile\": null, \"groupUid\": 0 }\n\t\t\t],\n\t\t\t\"intGridValuesGroups\": [],\n\t\t\t\"autoRuleGroups\": [],\n\t\t\t\"autoSourceLayerDefUid\": null,\n\t\t\t\"tilesetDefUid\": null,\n\t\t\t\"tilePivotX\": 0,\n\t\t\t\"tilePivotY\": 0\n\t\t}\n\t], \"entities\": [], \"tilesets\": [], \"enums\": [], \"externalEnums\": [], \"levelFields\": [] },\n\t\"levels\": [\n\t\t{\n\t\t\t\"identifier\": \"Level_0\",\n\t\t\t\"iid\": \"ab614260-3b70-11ee-9520-3bf6336da881\",\n\t\t\t\"uid\": 2,\n\t\t\t\"worldX\": -1,\n\t\t\t\"worldY\": -1,\n\t\t\t\"worldDepth\": 0,\n\t\t\t\"pxWid\": 192,\n\t\t\t\"pxHei\": 288,\n\t\t\t\"__bgColor\": \"#696A79\",\n\t\t\t\"bgColor\": null,\n\t\t\t\"useAutoIdentifier\": true,\n\t\t\t\"bgRelPath\": null,\n\t\t\t\"bgPos\": null,\n\t\t\t\"bgPivotX\": 0.5,\n\t\t\t\"bgPivotY\": 0.5,\n\t\t\t\"__smartColor\": \"#ADADB5\",\n\t\t\t\"__bgPos\": null,\n\t\t\t\"externalRelPath\": null,\n\t\t\t\"fieldInstances\": [],\n\t\t\t\"layerInstances\": [\n\t\t\t\t{\n\t\t\t\t\t\"__identifier\": \"IntGrid\",\n\t\t\t\t\t\"__type\": \"IntGrid\",\n\t\t\t\t\t\"__cWid\": 12,\n\t\t\t\t\t\"__cHei\": 18,\n\t\t\t\t\t\"__gridSize\": 16,\n\t\t\t\t\t\"__opacity\": 1,\n\t\t\t\t\t\"__pxTotalOffsetX\": 0,\n\t\t\t\t\t\"__pxTotalOffsetY\": 0,\n\t\t\t\t\t\"__tilesetDefUid\": null,\n\t\t\t\t\t\"__tilesetRelPath\": null,\n\t\t\t\t\t\"iid\": \"b608c490-3b70-11ee-9520-8f86d64003f8\",\n\t\t\t\t\t\"levelId\": 2,\n\t\t\t\t\t\"layerDefUid\": 3,\n\t\t\t\t\t\"pxOffsetX\": 0,\n\t\t\t\t\t\"pxOffsetY\": 0,\n\t\t\t\t\t\"visible\": true,\n\t\t\t\t\t\"optionalRules\": [],\n\t\t\t\t\t\"intGridCsv\": [\n\t\t\t\t\t\t0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,\n\t\t\t\t\t\t0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,4,0,0,1,0,0,0,\n\t\t\t\t\t\t0,0,0,1,0,0,0,0,1,1,1,1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,\n\t\t\t\t\t\t1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,1,1,1,1,1,0,0,1,1,0,0,0,0,0,0,0,1,0,\n\t\t\t\t\t\t0,0,0,3,0,0,0,0,0,0,1,0,0,1,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,\n\t\t\t\t\t\t1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,\n\t\t\t\t\t\t0,0,0,0,0,0\n\t\t\t\t\t],\n\t\t\t\t\t\"autoLayerTiles\": [],\n\t\t\t\t\t\"seed\": 8952318,\n\t\t\t\t\t\"overrideTilesetUid\": null,\n\t\t\t\t\t\"gridTiles\": [],\n\t\t\t\t\t\"entityInstances\": []\n\t\t\t\t}\n\t\t\t],\n\t\t\t\"__neighbours\": []\n\t\t},\n\t\t{\n\t\t\t\"identifier\": \"Level_1\",\n\t\t\t\"iid\": \"997a9650-3b70-11ee-9520-135904555230\",\n\t\t\t\"uid\": 1,\n\t\t\t\"worldX\": -1,\n\t\t\t\"worldY\": -1,\n\t\t\t\"worldDepth\": 0,\n\t\t\t\"pxWid\": 192,\n\t\t\t\"pxHei\": 288,\n\t\t\t\"__bgColor\": \"#696A79\",\n\t\t\t\"bgColor\": null,\n\t\t\t\"useAutoIdentifier\": true,\n\t\t\t\"bgRelPath\": null,\n\t\t\t\"bgPos\": null,\n\t\t\t\"bgPivotX\": 0.5,\n\t\t\t\"bgPivotY\": 0.5,\n\t\t\t\"__smartColor\": \"#ADADB5\",\n\t\t\t\"__bgPos\": null,\n\t\t\t\"externalRelPath\": null,\n\t\t\t\"fieldInstances\": [],\n\t\t\t\"layerInstances\": [\n\t\t\t\t{\n\t\t\t\t\t\"__identifier\": \"IntGrid\",\n\t\t\t\t\t\"__type\": \"IntGrid\",\n\t\t\t\t\t\"__cWid\": 12,\n\t\t\t\t\t\"__cHei\": 18,\n\t\t\t\t\t\"__gridSize\": 16,\n\t\t\t\t\t\"__opacity\": 1,\n\t\t\t\t\t\"__pxTotalOffsetX\": 0,\n\t\t\t\t\t\"__pxTotalOffsetY\": 0,\n\t\t\t\t\t\"__tilesetDefUid\": null,\n\t\t\t\t\t\"__tilesetRelPath\": null,\n\t\t\t\t\t\"iid\": \"b6087670-3b70-11ee-9520-07a9b41bdfd0\",\n\t\t\t\t\t\"levelId\": 1,\n\t\t\t\t\t\"layerDefUid\": 3,\n\t\t\t\t\t\"pxOffsetX\": 0,\n\t\t\t\t\t\"pxOffsetY\": 0,\n\t\t\t\t\t\"visible\": true,\n\t\t\t\t\t\"optionalRules\": [],\n\t\t\t\t\t\"intGridCsv\": [\n\t\t\t\t\t\t0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,\n\t\t\t\t\t\t0,0,1,2,0,0,0,0,0,0,1,0,0,0,1,2,0,4,0,2,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,\n\t\t\t\t\t\t0,0,0,1,0,2,2,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,1,1,1,1,1,0,1,\n\t\t\t\t\t\t1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,\n\t\t\t\t\t\t0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,\n\t\t\t\t\t\t0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,\n\t\t\t\t\t\t0,0,0,0,0,0\n\t\t\t\t\t],\n\t\t\t\t\t\"autoLayerTiles\": [],\n\t\t\t\t\t\"seed\": 2671766,\n\t\t\t\t\t\"overrideTilesetUid\": null,\n\t\t\t\t\t\"gridTiles\": [],\n\t\t\t\t\t\"entityInstances\": []\n\t\t\t\t}\n\t\t\t],\n\t\t\t\"__neighbours\": []\n\t\t}\n\t],\n\t\"worlds\": [],\n\t\"dummyWorldIid\": \"ec4f3a31-3b70-11ee-8c17-193a11797633\"\n}");
+	this.parseJson(overrideEmbedJson != null ? overrideEmbedJson : "{\n\t\"__header__\": {\n\t\t\"fileType\": \"LDtk Project JSON\",\n\t\t\"app\": \"LDtk\",\n\t\t\"doc\": \"https://ldtk.io/json\",\n\t\t\"schema\": \"https://ldtk.io/files/JSON_SCHEMA.json\",\n\t\t\"appAuthor\": \"Sebastien 'deepnight' Benard\",\n\t\t\"appVersion\": \"1.4.1\",\n\t\t\"url\": \"https://ldtk.io\"\n\t},\n\t\"iid\": \"ec4f3a30-3b70-11ee-8c17-c341fb10f971\",\n\t\"jsonVersion\": \"1.4.1\",\n\t\"appBuildId\": 471015,\n\t\"nextUid\": 14,\n\t\"identifierStyle\": \"Capitalize\",\n\t\"toc\": [],\n\t\"worldLayout\": \"LinearHorizontal\",\n\t\"worldGridWidth\": 256,\n\t\"worldGridHeight\": 256,\n\t\"defaultLevelWidth\": 192,\n\t\"defaultLevelHeight\": 288,\n\t\"defaultPivotX\": 0,\n\t\"defaultPivotY\": 0,\n\t\"defaultGridSize\": 16,\n\t\"defaultEntityWidth\": 16,\n\t\"defaultEntityHeight\": 16,\n\t\"bgColor\": \"#40465B\",\n\t\"defaultLevelBgColor\": \"#696A79\",\n\t\"minifyJson\": false,\n\t\"externalLevels\": false,\n\t\"exportTiled\": false,\n\t\"simplifiedExport\": false,\n\t\"imageExportMode\": \"None\",\n\t\"exportLevelBg\": true,\n\t\"pngFilePattern\": null,\n\t\"backupOnSave\": false,\n\t\"backupLimit\": 10,\n\t\"backupRelPath\": null,\n\t\"levelNamePattern\": \"Level_%idx\",\n\t\"tutorialDesc\": null,\n\t\"customCommands\": [],\n\t\"flags\": [],\n\t\"defs\": { \"layers\": [\n\t\t{\n\t\t\t\"__type\": \"Entities\",\n\t\t\t\"identifier\": \"Entities\",\n\t\t\t\"type\": \"Entities\",\n\t\t\t\"uid\": 6,\n\t\t\t\"doc\": null,\n\t\t\t\"uiColor\": null,\n\t\t\t\"gridSize\": 16,\n\t\t\t\"guideGridWid\": 0,\n\t\t\t\"guideGridHei\": 0,\n\t\t\t\"displayOpacity\": 1,\n\t\t\t\"inactiveOpacity\": 0.6,\n\t\t\t\"hideInList\": false,\n\t\t\t\"hideFieldsWhenInactive\": true,\n\t\t\t\"canSelectWhenInactive\": true,\n\t\t\t\"renderInWorldView\": true,\n\t\t\t\"pxOffsetX\": 0,\n\t\t\t\"pxOffsetY\": 0,\n\t\t\t\"parallaxFactorX\": 0,\n\t\t\t\"parallaxFactorY\": 0,\n\t\t\t\"parallaxScaling\": true,\n\t\t\t\"requiredTags\": [],\n\t\t\t\"excludedTags\": [],\n\t\t\t\"intGridValues\": [],\n\t\t\t\"intGridValuesGroups\": [],\n\t\t\t\"autoRuleGroups\": [],\n\t\t\t\"autoSourceLayerDefUid\": null,\n\t\t\t\"tilesetDefUid\": null,\n\t\t\t\"tilePivotX\": 0,\n\t\t\t\"tilePivotY\": 0\n\t\t},\n\t\t{\n\t\t\t\"__type\": \"IntGrid\",\n\t\t\t\"identifier\": \"IntGrid\",\n\t\t\t\"type\": \"IntGrid\",\n\t\t\t\"uid\": 3,\n\t\t\t\"doc\": null,\n\t\t\t\"uiColor\": null,\n\t\t\t\"gridSize\": 16,\n\t\t\t\"guideGridWid\": 0,\n\t\t\t\"guideGridHei\": 0,\n\t\t\t\"displayOpacity\": 1,\n\t\t\t\"inactiveOpacity\": 1,\n\t\t\t\"hideInList\": false,\n\t\t\t\"hideFieldsWhenInactive\": false,\n\t\t\t\"canSelectWhenInactive\": true,\n\t\t\t\"renderInWorldView\": true,\n\t\t\t\"pxOffsetX\": 0,\n\t\t\t\"pxOffsetY\": 0,\n\t\t\t\"parallaxFactorX\": 0,\n\t\t\t\"parallaxFactorY\": 0,\n\t\t\t\"parallaxScaling\": true,\n\t\t\t\"requiredTags\": [],\n\t\t\t\"excludedTags\": [],\n\t\t\t\"intGridValues\": [\n\t\t\t\t{ \"value\": 1, \"identifier\": \"Wall\", \"color\": \"#343434\", \"tile\": null, \"groupUid\": 0 },\n\t\t\t\t{ \"value\": 2, \"identifier\": \"Slime\", \"color\": \"#42FF00\", \"tile\": null, \"groupUid\": 0 },\n\t\t\t\t{ \"value\": 3, \"identifier\": \"Exit\", \"color\": \"#FFFFFF\", \"tile\": null, \"groupUid\": 0 },\n\t\t\t\t{ \"value\": 4, \"identifier\": \"Player\", \"color\": \"#FAFF00\", \"tile\": null, \"groupUid\": 0 }\n\t\t\t],\n\t\t\t\"intGridValuesGroups\": [],\n\t\t\t\"autoRuleGroups\": [],\n\t\t\t\"autoSourceLayerDefUid\": null,\n\t\t\t\"tilesetDefUid\": null,\n\t\t\t\"tilePivotX\": 0,\n\t\t\t\"tilePivotY\": 0\n\t\t}\n\t], \"entities\": [\n\t\t{\n\t\t\t\"identifier\": \"Switch\",\n\t\t\t\"uid\": 7,\n\t\t\t\"tags\": [],\n\t\t\t\"exportToToc\": false,\n\t\t\t\"doc\": null,\n\t\t\t\"width\": 16,\n\t\t\t\"height\": 16,\n\t\t\t\"resizableX\": false,\n\t\t\t\"resizableY\": false,\n\t\t\t\"minWidth\": null,\n\t\t\t\"maxWidth\": null,\n\t\t\t\"minHeight\": null,\n\t\t\t\"maxHeight\": null,\n\t\t\t\"keepAspectRatio\": false,\n\t\t\t\"tileOpacity\": 1,\n\t\t\t\"fillOpacity\": 1,\n\t\t\t\"lineOpacity\": 1,\n\t\t\t\"hollow\": false,\n\t\t\t\"color\": \"#BE4A2F\",\n\t\t\t\"renderMode\": \"Rectangle\",\n\t\t\t\"showName\": true,\n\t\t\t\"tilesetId\": null,\n\t\t\t\"tileRenderMode\": \"FitInside\",\n\t\t\t\"tileRect\": null,\n\t\t\t\"uiTileRect\": { \"tilesetUid\": 8, \"x\": 432, \"y\": 16, \"w\": 16, \"h\": 16 },\n\t\t\t\"nineSliceBorders\": [],\n\t\t\t\"maxCount\": 0,\n\t\t\t\"limitScope\": \"PerLevel\",\n\t\t\t\"limitBehavior\": \"MoveLastOne\",\n\t\t\t\"pivotX\": 0.5,\n\t\t\t\"pivotY\": 0.5,\n\t\t\t\"fieldDefs\": [\n\t\t\t\t{\n\t\t\t\t\t\"identifier\": \"Targets\",\n\t\t\t\t\t\"doc\": null,\n\t\t\t\t\t\"__type\": \"Array<EntityRef>\",\n\t\t\t\t\t\"uid\": 12,\n\t\t\t\t\t\"type\": \"F_EntityRef\",\n\t\t\t\t\t\"isArray\": true,\n\t\t\t\t\t\"canBeNull\": false,\n\t\t\t\t\t\"arrayMinLength\": null,\n\t\t\t\t\t\"arrayMaxLength\": null,\n\t\t\t\t\t\"editorDisplayMode\": \"RefLinkBetweenCenters\",\n\t\t\t\t\t\"editorDisplayScale\": 1,\n\t\t\t\t\t\"editorDisplayPos\": \"Above\",\n\t\t\t\t\t\"editorLinkStyle\": \"CurvedArrow\",\n\t\t\t\t\t\"editorDisplayColor\": null,\n\t\t\t\t\t\"editorAlwaysShow\": false,\n\t\t\t\t\t\"editorShowInWorld\": true,\n\t\t\t\t\t\"editorCutLongValues\": true,\n\t\t\t\t\t\"editorTextSuffix\": null,\n\t\t\t\t\t\"editorTextPrefix\": null,\n\t\t\t\t\t\"useForSmartColor\": false,\n\t\t\t\t\t\"min\": null,\n\t\t\t\t\t\"max\": null,\n\t\t\t\t\t\"regex\": null,\n\t\t\t\t\t\"acceptFileTypes\": null,\n\t\t\t\t\t\"defaultOverride\": null,\n\t\t\t\t\t\"textLanguageMode\": null,\n\t\t\t\t\t\"symmetricalRef\": false,\n\t\t\t\t\t\"autoChainRef\": true,\n\t\t\t\t\t\"allowOutOfLevelRef\": false,\n\t\t\t\t\t\"allowedRefs\": \"OnlyTags\",\n\t\t\t\t\t\"allowedRefsEntityUid\": null,\n\t\t\t\t\t\"allowedRefTags\": [\"Targets\"],\n\t\t\t\t\t\"tilesetUid\": null\n\t\t\t\t}\n\t\t\t]\n\t\t},\n\t\t{\n\t\t\t\"identifier\": \"Door\",\n\t\t\t\"uid\": 9,\n\t\t\t\"tags\": [\"Targets\"],\n\t\t\t\"exportToToc\": false,\n\t\t\t\"doc\": null,\n\t\t\t\"width\": 16,\n\t\t\t\"height\": 16,\n\t\t\t\"resizableX\": false,\n\t\t\t\"resizableY\": false,\n\t\t\t\"minWidth\": null,\n\t\t\t\"maxWidth\": null,\n\t\t\t\"minHeight\": null,\n\t\t\t\"maxHeight\": null,\n\t\t\t\"keepAspectRatio\": false,\n\t\t\t\"tileOpacity\": 1,\n\t\t\t\"fillOpacity\": 1,\n\t\t\t\"lineOpacity\": 1,\n\t\t\t\"hollow\": false,\n\t\t\t\"color\": \"#D77643\",\n\t\t\t\"renderMode\": \"Rectangle\",\n\t\t\t\"showName\": true,\n\t\t\t\"tilesetId\": null,\n\t\t\t\"tileRenderMode\": \"FitInside\",\n\t\t\t\"tileRect\": null,\n\t\t\t\"uiTileRect\": { \"tilesetUid\": 8, \"x\": 192, \"y\": 256, \"w\": 16, \"h\": 16 },\n\t\t\t\"nineSliceBorders\": [],\n\t\t\t\"maxCount\": 0,\n\t\t\t\"limitScope\": \"PerLevel\",\n\t\t\t\"limitBehavior\": \"MoveLastOne\",\n\t\t\t\"pivotX\": 0.5,\n\t\t\t\"pivotY\": 0.5,\n\t\t\t\"fieldDefs\": []\n\t\t}\n\t], \"tilesets\": [\n\t\t{\n\t\t\t\"__cWid\": 32,\n\t\t\t\"__cHei\": 64,\n\t\t\t\"identifier\": \"Internal_Icons\",\n\t\t\t\"uid\": 8,\n\t\t\t\"relPath\": null,\n\t\t\t\"embedAtlas\": \"LdtkIcons\",\n\t\t\t\"pxWid\": 512,\n\t\t\t\"pxHei\": 1024,\n\t\t\t\"tileGridSize\": 16,\n\t\t\t\"spacing\": 0,\n\t\t\t\"padding\": 0,\n\t\t\t\"tags\": [],\n\t\t\t\"tagsSourceEnumUid\": null,\n\t\t\t\"enumTags\": [],\n\t\t\t\"customData\": [],\n\t\t\t\"savedSelections\": [],\n\t\t\t\"cachedPixelData\": {\n\t\t\t\t\"opaqueTiles\": \"00000000000000000000000000000000000000000000000000000000000000000000000000000000111111111000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\",\n\t\t\t\t\"averageColors\": \"00004b344233459b423349a959a9379c688769758ca4bc9489aab9aa58cc58bc42d74d2244ce428f4c7e4ff74abb45564ffe7dda7888a899889900000000000069a969a97a99999999989a85998699767a7579667ccc7ccc7bcb7caa7ccc7ccc22d72d2224ce228f2c7e2ff72abb25562ffeba444955ab55974300000000000059764b97599868ac679a69ab4a84477756787688475347532a932a934a837a83f2b6fb22f3acf15afa6cfdc6f899f334fccca778a7440000000000000000000059aa49aa59996999699969aa489949995999799a499949992999299948997889a385a823a379a248a749aa85a667a223a8880000000000000000000000000000189919991999199939994778166727772889289948993aaa389949a959a959a932b63b2233ad315a395c3ec6389933343ccc00000000000000000000000000008aaa8aaa8aaa8aaa8aaa7bbb8aaa7bbb8bcb7aaa8bcb7bcb69aa8aaa8aaa69aa6abb6abb6abb6abb6a226a226a226a2261a661a661a661a600000000000000006c526c426c926c91659b649c66a566a46a7b6a7b667766776aba6abb676367636da46da46da46da4616c616c616c616c8abb8abb8abb8abb00000000000000006ba5579a6689598658875cb66abb9aa989aa98ac7abc6678968a88877c87cba952755823536952475648598454455223599900000000000000000000000000003ec63da76db79dc7554885498969b4377fa29e8289cdb9ce5ade5ade49ce49ce82a68a22839b8259885b8cb5855683238aab00000000000000000000000000005d745d867da87e75448c458b86ad76ae68ac679c779b78ce3c9378867ca6adb784858933847a844788498b94854584348989000000000000000000000000000057a668b899b8449396534493858364836853697769436667755667776c73498862b66b22639c615a695c6dc5655663346bbc00000000000000000000000000006bba79b87d9679ad776a7b988abc8abc4aceaace4bba4bba6b8c4c9c4cac5b7c62a66a22639c6159695b6db5655663236abb000000000000000000000000000059aaada7a9bdcdbd59aaada7a9bdcdbd8cb8a9b98ac889b8aabaacc79ea498bd82b68b2283ad815a8a5c8ec5856783348ccc000000000000000000000000000057ac596b55946abb5abb8ca65d8677ac437b5a3368886934547a595897a57b2372957923738a7258784a7c9474557323799a0000000000000000000000000000799a5c817b9b3a886abb8464676a7a967a857a857977898889882a954a956b9562d76d2264ce628f6c7e6ff76abb65566ffe0000000000000000000000000000499977997868799579875a6465995a8957a66a735ba53a935969479a576a467732d73d2234ce328f3c7e3ff73abb35563ffe00000000000000000000000000005744985596659b747a659a76768a7a567675477738873566597698779445946572d77d2274ce728f7c7e7ff77abb75567ffe000000000000000000000000000088668a66868a9b8577666a4467846987778a7789797a87888b8676667a767ca562d76d2264ce628f6c7e6ff76abb65566ffe0000000000000000000000000000449374934c957c9574847a438475a3958695768565956853b9447a777493a493000000000000000000000000000000000000000000000000000000000000000079547a838394689a49547a6357636975786383848997b384655873748974588400000000000000000000000000000000000000000000000000000000000000007da48ca769768b554b976cba3a824a82696259526a758c986963694268478b850000000000000000000000000000000000000000000000000000000000000000696559555579557458598674573353635677575579667a8758538b848a44838b0000000000000000000000000000000000000000000000000000000000000000385437883b95534549555a855877997598772b953b9529a939a95aa84b949a840000000000000000000000000000000000000000000000000000000000000000897687898776878578998485878b789a847b8b6579998a55886998788a879b9700000000000000000000000000000000000000000000000000000000000000006ba97988897469646b987a876a997a987b987955766777765c958a858777867700000000000000000000000000000000000000000000000000000000000000005a747b947b967866a855788928884566578879a98864a579233433343334633400000000000000000000000000000000000000000000000000000000000000006a747b846a844997598669987bb8b8aabaa96ba67cba9854687669864a864b86000000000000000000000000000000000000000000000000000000000000000038ab389b48ab47ac49ab48ac579b48ac49ab38ab58bc4b8659aa5c8457ac586a0000000000000000000000000000000000000000000000000000000000000000299b2999389a379b38893955589a79bc8c9588bc7a8c599a689a5b8558ac597a00000000000000000000000000000000000000000000000000000000000000002888378936773975579b389a579b488938884b74469a465747785b75568b586a000000000000000000000000000000000000000000000000000000000000000038553865285428444755566455763a64356746743779397445674c63469b585a0000000000000000000000000000000000000000000000000000000000000000284437643a7629641555297938874879385438664665355536775a85569a785a00000000000000000000000000000000000000000000000000000000000000005789789b779b6a75668a897b64558555876576798855845694749b74a68a986a000000000000000000000000000000000000000000000000000000000000000047776766678867667799798698768866976685673755387638763b74358b387a00000000000000000000000000000000000000000000000000000000000000005777686569874944498846774677685568646987677778775a456a65ab66ca550000000000000000000000000000000000000000000000000000000000000000355656666656455546455345634558655854aa749854775577737b64777a7a7900000000000000000000000000000000000000000000000000000000000000005955895598546c758c75ba76b88797749b75a98967888789978857888788a78800000000000000000000000000000000000000000000000000000000000000006977897799776a748a749a747987ba97aa998ba8a78bab75a87ab89cbb74b97b000000000000000000000000000000000000000000000000000000000000000059645788598858546a7569996a767a766887649c767476797a54766977667976000000000000000000000000000000000000000000000000000000000000000078887a75796577777a869976987799865777667787668a53857a885a98659546000000000000000000000000000000000000000000000000000000000000000087559877a96586779788b9769866888899877576777879647759a8659888a7440000000000000000000000000000000000000000000000000000000000000000785477887a55747b7585795b7999a9667456878889aa58997888797b56776855000000000000000000000000000000000000000000000000000000000000000048545854617b644557448744537b85565899899a39994a7a58998999a5558988000000000000000000000000000000000000000000000000000000000000000089659744a6559555a55698889486a57aab43a96b9556a665a854a579a744a5550000000000000000000000000000000000000000000000000000000000000000596587556677777777778578876687778974867787668876988897779876a744000000000000000000000000000000000000000000000000000000000000000067536556875448225922415851595456654587459456947b48997a86764585560000000000000000000000000000000000000000000000000000000000000000a854a89989998556a7559766a7779976a975997596749a64968a9779a55595450000000000000000000000000000000000000000000000000000000000000000674487549854885594558445a777a7778373579b5a32675584456975958b9944000000000000000000000000000000000000000000000000000000000000000077449754b674b469b964b658a766a864a777a975a566a754a677a875b777b9650000000000000000000000000000000000000000000000000000000000000000775577547445755676558744697377637766785334556566577859755877887600000000000000000000000000000000000000000000000000000000000000002789287328772a7436793a9457795a84368a3334323364555a757b856aaa9a5500000000000000000000000000000000000000000000000000000000000000005888516b5a3349a95964797778987a5375696a536668796577887a847a74797500000000000000000000000000000000000000000000000000000000000000007b537a53767b6769748775767a9a7988759c768a7b957a847775776478647854000000000000000000000000000000000000000000000000000000000000000098999788988998889b879a869a869a86696565676965667767446854677877880000000000000000000000000000000000000000000000000000000000000000678a77997ba647887a7589999ca59ba889aa9999655667bd6ba979a967bc6c7300000000000000000000000000000000000000000000000000000000000000006aaa6556518566775965485438985888576546854ca547775999699989997a9900000000000000000000000000000000000000000000000000000000000000006678526466335644769c5a7888547a785c4454a658885c946285627b6c54674a000000000000000000000000000000000000000000000000000000000000000033843b33359c337c395c3b853899355653745a33558b536b585b5a7557885445000000000000000000000000000000000000000000000000000000000000000026551566274525664a85486546564656377756664655465545454656516a656700000000000000000000000000000000000000000000000000000000000000004964696468553a86485437443645896588548856895477446a7569547a757954000000000000000000000000000000000000000000000000000000000000000036678566399988993b968b955ba658995566588859645a986ca7796477887ca6000000000000000000000000000000000000000000000000000000000000000019562a554c665c55156a256a468c557b1a8429744a845a83196b285a496b595b00000000000000000000000000000000000000000000000000000000000000001486248645a7549615782578469a5689187629764a875a861a692a694b7a5b79000000000000000000000000000000000000000000000000000000000000000017772777489858881555255546665556199528854884588411122112411251120000000000000000000000000000000000000000000000000000000000000000\"\n\t\t\t}\n\t\t}\n\t], \"enums\": [], \"externalEnums\": [], \"levelFields\": [] },\n\t\"levels\": [\n\t\t{\n\t\t\t\"identifier\": \"Level_0\",\n\t\t\t\"iid\": \"ab614260-3b70-11ee-9520-3bf6336da881\",\n\t\t\t\"uid\": 2,\n\t\t\t\"worldX\": -1,\n\t\t\t\"worldY\": -1,\n\t\t\t\"worldDepth\": 0,\n\t\t\t\"pxWid\": 192,\n\t\t\t\"pxHei\": 288,\n\t\t\t\"__bgColor\": \"#696A79\",\n\t\t\t\"bgColor\": null,\n\t\t\t\"useAutoIdentifier\": true,\n\t\t\t\"bgRelPath\": null,\n\t\t\t\"bgPos\": null,\n\t\t\t\"bgPivotX\": 0.5,\n\t\t\t\"bgPivotY\": 0.5,\n\t\t\t\"__smartColor\": \"#ADADB5\",\n\t\t\t\"__bgPos\": null,\n\t\t\t\"externalRelPath\": null,\n\t\t\t\"fieldInstances\": [],\n\t\t\t\"layerInstances\": [\n\t\t\t\t{\n\t\t\t\t\t\"__identifier\": \"Entities\",\n\t\t\t\t\t\"__type\": \"Entities\",\n\t\t\t\t\t\"__cWid\": 12,\n\t\t\t\t\t\"__cHei\": 18,\n\t\t\t\t\t\"__gridSize\": 16,\n\t\t\t\t\t\"__opacity\": 1,\n\t\t\t\t\t\"__pxTotalOffsetX\": 0,\n\t\t\t\t\t\"__pxTotalOffsetY\": 0,\n\t\t\t\t\t\"__tilesetDefUid\": null,\n\t\t\t\t\t\"__tilesetRelPath\": null,\n\t\t\t\t\t\"iid\": \"3fee0e10-3b70-11ee-9520-11ed23e08903\",\n\t\t\t\t\t\"levelId\": 2,\n\t\t\t\t\t\"layerDefUid\": 6,\n\t\t\t\t\t\"pxOffsetX\": 0,\n\t\t\t\t\t\"pxOffsetY\": 0,\n\t\t\t\t\t\"visible\": true,\n\t\t\t\t\t\"optionalRules\": [],\n\t\t\t\t\t\"intGridCsv\": [],\n\t\t\t\t\t\"autoLayerTiles\": [],\n\t\t\t\t\t\"seed\": 2181564,\n\t\t\t\t\t\"overrideTilesetUid\": null,\n\t\t\t\t\t\"gridTiles\": [],\n\t\t\t\t\t\"entityInstances\": []\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"__identifier\": \"IntGrid\",\n\t\t\t\t\t\"__type\": \"IntGrid\",\n\t\t\t\t\t\"__cWid\": 12,\n\t\t\t\t\t\"__cHei\": 18,\n\t\t\t\t\t\"__gridSize\": 16,\n\t\t\t\t\t\"__opacity\": 1,\n\t\t\t\t\t\"__pxTotalOffsetX\": 0,\n\t\t\t\t\t\"__pxTotalOffsetY\": 0,\n\t\t\t\t\t\"__tilesetDefUid\": null,\n\t\t\t\t\t\"__tilesetRelPath\": null,\n\t\t\t\t\t\"iid\": \"b608c490-3b70-11ee-9520-8f86d64003f8\",\n\t\t\t\t\t\"levelId\": 2,\n\t\t\t\t\t\"layerDefUid\": 3,\n\t\t\t\t\t\"pxOffsetX\": 0,\n\t\t\t\t\t\"pxOffsetY\": 0,\n\t\t\t\t\t\"visible\": true,\n\t\t\t\t\t\"optionalRules\": [],\n\t\t\t\t\t\"intGridCsv\": [\n\t\t\t\t\t\t0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,\n\t\t\t\t\t\t0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,4,0,0,1,0,0,0,\n\t\t\t\t\t\t0,0,0,1,0,0,0,0,1,1,1,1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,\n\t\t\t\t\t\t1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,1,1,1,1,1,0,0,1,1,0,0,0,0,0,0,0,1,0,\n\t\t\t\t\t\t0,0,0,3,0,0,0,0,0,0,1,0,0,1,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,\n\t\t\t\t\t\t1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,\n\t\t\t\t\t\t0,0,0,0,0,0\n\t\t\t\t\t],\n\t\t\t\t\t\"autoLayerTiles\": [],\n\t\t\t\t\t\"seed\": 8952318,\n\t\t\t\t\t\"overrideTilesetUid\": null,\n\t\t\t\t\t\"gridTiles\": [],\n\t\t\t\t\t\"entityInstances\": []\n\t\t\t\t}\n\t\t\t],\n\t\t\t\"__neighbours\": []\n\t\t},\n\t\t{\n\t\t\t\"identifier\": \"Level_1\",\n\t\t\t\"iid\": \"997a9650-3b70-11ee-9520-135904555230\",\n\t\t\t\"uid\": 1,\n\t\t\t\"worldX\": -1,\n\t\t\t\"worldY\": -1,\n\t\t\t\"worldDepth\": 0,\n\t\t\t\"pxWid\": 192,\n\t\t\t\"pxHei\": 288,\n\t\t\t\"__bgColor\": \"#696A79\",\n\t\t\t\"bgColor\": null,\n\t\t\t\"useAutoIdentifier\": true,\n\t\t\t\"bgRelPath\": null,\n\t\t\t\"bgPos\": null,\n\t\t\t\"bgPivotX\": 0.5,\n\t\t\t\"bgPivotY\": 0.5,\n\t\t\t\"__smartColor\": \"#ADADB5\",\n\t\t\t\"__bgPos\": null,\n\t\t\t\"externalRelPath\": null,\n\t\t\t\"fieldInstances\": [],\n\t\t\t\"layerInstances\": [\n\t\t\t\t{\n\t\t\t\t\t\"__identifier\": \"Entities\",\n\t\t\t\t\t\"__type\": \"Entities\",\n\t\t\t\t\t\"__cWid\": 12,\n\t\t\t\t\t\"__cHei\": 18,\n\t\t\t\t\t\"__gridSize\": 16,\n\t\t\t\t\t\"__opacity\": 1,\n\t\t\t\t\t\"__pxTotalOffsetX\": 0,\n\t\t\t\t\t\"__pxTotalOffsetY\": 0,\n\t\t\t\t\t\"__tilesetDefUid\": null,\n\t\t\t\t\t\"__tilesetRelPath\": null,\n\t\t\t\t\t\"iid\": \"3fee3520-3b70-11ee-9520-aba77a466a77\",\n\t\t\t\t\t\"levelId\": 1,\n\t\t\t\t\t\"layerDefUid\": 6,\n\t\t\t\t\t\"pxOffsetX\": 0,\n\t\t\t\t\t\"pxOffsetY\": 0,\n\t\t\t\t\t\"visible\": true,\n\t\t\t\t\t\"optionalRules\": [],\n\t\t\t\t\t\"intGridCsv\": [],\n\t\t\t\t\t\"autoLayerTiles\": [],\n\t\t\t\t\t\"seed\": 3887591,\n\t\t\t\t\t\"overrideTilesetUid\": null,\n\t\t\t\t\t\"gridTiles\": [],\n\t\t\t\t\t\"entityInstances\": []\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"__identifier\": \"IntGrid\",\n\t\t\t\t\t\"__type\": \"IntGrid\",\n\t\t\t\t\t\"__cWid\": 12,\n\t\t\t\t\t\"__cHei\": 18,\n\t\t\t\t\t\"__gridSize\": 16,\n\t\t\t\t\t\"__opacity\": 1,\n\t\t\t\t\t\"__pxTotalOffsetX\": 0,\n\t\t\t\t\t\"__pxTotalOffsetY\": 0,\n\t\t\t\t\t\"__tilesetDefUid\": null,\n\t\t\t\t\t\"__tilesetRelPath\": null,\n\t\t\t\t\t\"iid\": \"b6087670-3b70-11ee-9520-07a9b41bdfd0\",\n\t\t\t\t\t\"levelId\": 1,\n\t\t\t\t\t\"layerDefUid\": 3,\n\t\t\t\t\t\"pxOffsetX\": 0,\n\t\t\t\t\t\"pxOffsetY\": 0,\n\t\t\t\t\t\"visible\": true,\n\t\t\t\t\t\"optionalRules\": [],\n\t\t\t\t\t\"intGridCsv\": [\n\t\t\t\t\t\t0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,\n\t\t\t\t\t\t0,0,1,2,0,0,0,0,0,0,1,0,0,0,1,2,0,4,0,2,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,\n\t\t\t\t\t\t0,0,0,1,0,2,2,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,1,1,1,1,1,0,1,\n\t\t\t\t\t\t1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,\n\t\t\t\t\t\t0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,\n\t\t\t\t\t\t0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,\n\t\t\t\t\t\t0,0,0,0,0,0\n\t\t\t\t\t],\n\t\t\t\t\t\"autoLayerTiles\": [],\n\t\t\t\t\t\"seed\": 2671766,\n\t\t\t\t\t\"overrideTilesetUid\": null,\n\t\t\t\t\t\"gridTiles\": [],\n\t\t\t\t\t\"entityInstances\": []\n\t\t\t\t}\n\t\t\t],\n\t\t\t\"__neighbours\": []\n\t\t},\n\t\t{\n\t\t\t\"identifier\": \"Level_2\",\n\t\t\t\"iid\": \"8b839d30-3b70-11ee-9520-e1478d56b12c\",\n\t\t\t\"uid\": 13,\n\t\t\t\"worldX\": -1,\n\t\t\t\"worldY\": -1,\n\t\t\t\"worldDepth\": 0,\n\t\t\t\"pxWid\": 192,\n\t\t\t\"pxHei\": 288,\n\t\t\t\"__bgColor\": \"#696A79\",\n\t\t\t\"bgColor\": null,\n\t\t\t\"useAutoIdentifier\": true,\n\t\t\t\"bgRelPath\": null,\n\t\t\t\"bgPos\": null,\n\t\t\t\"bgPivotX\": 0.5,\n\t\t\t\"bgPivotY\": 0.5,\n\t\t\t\"__smartColor\": \"#ADADB5\",\n\t\t\t\"__bgPos\": null,\n\t\t\t\"externalRelPath\": null,\n\t\t\t\"fieldInstances\": [],\n\t\t\t\"layerInstances\": [\n\t\t\t\t{\n\t\t\t\t\t\"__identifier\": \"Entities\",\n\t\t\t\t\t\"__type\": \"Entities\",\n\t\t\t\t\t\"__cWid\": 12,\n\t\t\t\t\t\"__cHei\": 18,\n\t\t\t\t\t\"__gridSize\": 16,\n\t\t\t\t\t\"__opacity\": 1,\n\t\t\t\t\t\"__pxTotalOffsetX\": 0,\n\t\t\t\t\t\"__pxTotalOffsetY\": 0,\n\t\t\t\t\t\"__tilesetDefUid\": null,\n\t\t\t\t\t\"__tilesetRelPath\": null,\n\t\t\t\t\t\"iid\": \"8b839d31-3b70-11ee-9520-039d331080b4\",\n\t\t\t\t\t\"levelId\": 13,\n\t\t\t\t\t\"layerDefUid\": 6,\n\t\t\t\t\t\"pxOffsetX\": 0,\n\t\t\t\t\t\"pxOffsetY\": 0,\n\t\t\t\t\t\"visible\": true,\n\t\t\t\t\t\"optionalRules\": [],\n\t\t\t\t\t\"intGridCsv\": [],\n\t\t\t\t\t\"autoLayerTiles\": [],\n\t\t\t\t\t\"seed\": 3887591,\n\t\t\t\t\t\"overrideTilesetUid\": null,\n\t\t\t\t\t\"gridTiles\": [],\n\t\t\t\t\t\"entityInstances\": [\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\"__identifier\": \"Switch\",\n\t\t\t\t\t\t\t\"__grid\": [8,8],\n\t\t\t\t\t\t\t\"__pivot\": [0.5,0.5],\n\t\t\t\t\t\t\t\"__tags\": [],\n\t\t\t\t\t\t\t\"__tile\": null,\n\t\t\t\t\t\t\t\"__smartColor\": \"#BE4A2F\",\n\t\t\t\t\t\t\t\"__worldX\": 616,\n\t\t\t\t\t\t\t\"__worldY\": 136,\n\t\t\t\t\t\t\t\"iid\": \"8b839d32-3b70-11ee-9520-a9ccd4dfb9c1\",\n\t\t\t\t\t\t\t\"width\": 16,\n\t\t\t\t\t\t\t\"height\": 16,\n\t\t\t\t\t\t\t\"defUid\": 7,\n\t\t\t\t\t\t\t\"px\": [136,136],\n\t\t\t\t\t\t\t\"fieldInstances\": [{ \"__identifier\": \"Targets\", \"__type\": \"Array<EntityRef>\", \"__value\": [{\n\t\t\t\t\t\t\t\t\"entityIid\": \"8b83c440-3b70-11ee-9520-b97892237e4f\",\n\t\t\t\t\t\t\t\t\"layerIid\": \"8b839d31-3b70-11ee-9520-039d331080b4\",\n\t\t\t\t\t\t\t\t\"levelIid\": \"8b839d30-3b70-11ee-9520-e1478d56b12c\",\n\t\t\t\t\t\t\t\t\"worldIid\": \"ec4f3a31-3b70-11ee-8c17-193a11797633\"\n\t\t\t\t\t\t\t}], \"__tile\": null, \"defUid\": 12, \"realEditorValues\": [{\n\t\t\t\t\t\t\t\t\"id\": \"V_String\",\n\t\t\t\t\t\t\t\t\"params\": [\"8b83c440-3b70-11ee-9520-b97892237e4f\"]\n\t\t\t\t\t\t\t}] }]\n\t\t\t\t\t\t},\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\"__identifier\": \"Door\",\n\t\t\t\t\t\t\t\"__grid\": [8,13],\n\t\t\t\t\t\t\t\"__pivot\": [0.5,0.5],\n\t\t\t\t\t\t\t\"__tags\": [\"Targets\"],\n\t\t\t\t\t\t\t\"__tile\": null,\n\t\t\t\t\t\t\t\"__smartColor\": \"#D77643\",\n\t\t\t\t\t\t\t\"__worldX\": 616,\n\t\t\t\t\t\t\t\"__worldY\": 216,\n\t\t\t\t\t\t\t\"iid\": \"8b83c440-3b70-11ee-9520-b97892237e4f\",\n\t\t\t\t\t\t\t\"width\": 16,\n\t\t\t\t\t\t\t\"height\": 16,\n\t\t\t\t\t\t\t\"defUid\": 9,\n\t\t\t\t\t\t\t\"px\": [136,216],\n\t\t\t\t\t\t\t\"fieldInstances\": []\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"__identifier\": \"IntGrid\",\n\t\t\t\t\t\"__type\": \"IntGrid\",\n\t\t\t\t\t\"__cWid\": 12,\n\t\t\t\t\t\"__cHei\": 18,\n\t\t\t\t\t\"__gridSize\": 16,\n\t\t\t\t\t\"__opacity\": 1,\n\t\t\t\t\t\"__pxTotalOffsetX\": 0,\n\t\t\t\t\t\"__pxTotalOffsetY\": 0,\n\t\t\t\t\t\"__tilesetDefUid\": null,\n\t\t\t\t\t\"__tilesetRelPath\": null,\n\t\t\t\t\t\"iid\": \"8b83c443-3b70-11ee-9520-f9f1763bbc05\",\n\t\t\t\t\t\"levelId\": 13,\n\t\t\t\t\t\"layerDefUid\": 3,\n\t\t\t\t\t\"pxOffsetX\": 0,\n\t\t\t\t\t\"pxOffsetY\": 0,\n\t\t\t\t\t\"visible\": true,\n\t\t\t\t\t\"optionalRules\": [],\n\t\t\t\t\t\"intGridCsv\": [\n\t\t\t\t\t\t0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,\n\t\t\t\t\t\t0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,4,0,1,0,0,0,0,0,0,1,0,0,1,1,1,0,0,0,\n\t\t\t\t\t\t0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,1,1,1,1,0,0,0,1,0,0,1,1,1,0,0,\n\t\t\t\t\t\t1,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0,1,1,1,0,0,0,1,\n\t\t\t\t\t\t0,0,0,0,0,0,0,1,0,0,0,1,1,0,0,0,0,0,0,1,0,0,0,0,0,3,0,0,0,0,0,1,1,1,1,\n\t\t\t\t\t\t1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,\n\t\t\t\t\t\t0,0,0,0,0,0\n\t\t\t\t\t],\n\t\t\t\t\t\"autoLayerTiles\": [],\n\t\t\t\t\t\"seed\": 2671766,\n\t\t\t\t\t\"overrideTilesetUid\": null,\n\t\t\t\t\t\"gridTiles\": [],\n\t\t\t\t\t\"entityInstances\": []\n\t\t\t\t}\n\t\t\t],\n\t\t\t\"__neighbours\": []\n\t\t},\n\t\t{\n\t\t\t\"identifier\": \"Level_3\",\n\t\t\t\"iid\": \"25677a30-3b70-11ee-9520-b9d97f9af617\",\n\t\t\t\"uid\": 11,\n\t\t\t\"worldX\": -1,\n\t\t\t\"worldY\": -1,\n\t\t\t\"worldDepth\": 0,\n\t\t\t\"pxWid\": 192,\n\t\t\t\"pxHei\": 288,\n\t\t\t\"__bgColor\": \"#696A79\",\n\t\t\t\"bgColor\": null,\n\t\t\t\"useAutoIdentifier\": true,\n\t\t\t\"bgRelPath\": null,\n\t\t\t\"bgPos\": null,\n\t\t\t\"bgPivotX\": 0.5,\n\t\t\t\"bgPivotY\": 0.5,\n\t\t\t\"__smartColor\": \"#ADADB5\",\n\t\t\t\"__bgPos\": null,\n\t\t\t\"externalRelPath\": null,\n\t\t\t\"fieldInstances\": [],\n\t\t\t\"layerInstances\": [\n\t\t\t\t{\n\t\t\t\t\t\"__identifier\": \"Entities\",\n\t\t\t\t\t\"__type\": \"Entities\",\n\t\t\t\t\t\"__cWid\": 12,\n\t\t\t\t\t\"__cHei\": 18,\n\t\t\t\t\t\"__gridSize\": 16,\n\t\t\t\t\t\"__opacity\": 1,\n\t\t\t\t\t\"__pxTotalOffsetX\": 0,\n\t\t\t\t\t\"__pxTotalOffsetY\": 0,\n\t\t\t\t\t\"__tilesetDefUid\": null,\n\t\t\t\t\t\"__tilesetRelPath\": null,\n\t\t\t\t\t\"iid\": \"25677a31-3b70-11ee-9520-fb70df70bb82\",\n\t\t\t\t\t\"levelId\": 11,\n\t\t\t\t\t\"layerDefUid\": 6,\n\t\t\t\t\t\"pxOffsetX\": 0,\n\t\t\t\t\t\"pxOffsetY\": 0,\n\t\t\t\t\t\"visible\": true,\n\t\t\t\t\t\"optionalRules\": [],\n\t\t\t\t\t\"intGridCsv\": [],\n\t\t\t\t\t\"autoLayerTiles\": [],\n\t\t\t\t\t\"seed\": 3887591,\n\t\t\t\t\t\"overrideTilesetUid\": null,\n\t\t\t\t\t\"gridTiles\": [],\n\t\t\t\t\t\"entityInstances\": [\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\"__identifier\": \"Switch\",\n\t\t\t\t\t\t\t\"__grid\": [8,8],\n\t\t\t\t\t\t\t\"__pivot\": [0.5,0.5],\n\t\t\t\t\t\t\t\"__tags\": [],\n\t\t\t\t\t\t\t\"__tile\": null,\n\t\t\t\t\t\t\t\"__smartColor\": \"#BE4A2F\",\n\t\t\t\t\t\t\t\"__worldX\": 856,\n\t\t\t\t\t\t\t\"__worldY\": 136,\n\t\t\t\t\t\t\t\"iid\": \"25677a32-3b70-11ee-9520-956a7c4cc848\",\n\t\t\t\t\t\t\t\"width\": 16,\n\t\t\t\t\t\t\t\"height\": 16,\n\t\t\t\t\t\t\t\"defUid\": 7,\n\t\t\t\t\t\t\t\"px\": [136,136],\n\t\t\t\t\t\t\t\"fieldInstances\": [{ \"__identifier\": \"Targets\", \"__type\": \"Array<EntityRef>\", \"__value\": [\n\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\"entityIid\": \"25677a33-3b70-11ee-9520-510934e23f7a\",\n\t\t\t\t\t\t\t\t\t\"layerIid\": \"25677a31-3b70-11ee-9520-fb70df70bb82\",\n\t\t\t\t\t\t\t\t\t\"levelIid\": \"25677a30-3b70-11ee-9520-b9d97f9af617\",\n\t\t\t\t\t\t\t\t\t\"worldIid\": \"ec4f3a31-3b70-11ee-8c17-193a11797633\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\"entityIid\": \"4e4d4ba0-3b70-11ee-9520-3de8e8c72939\",\n\t\t\t\t\t\t\t\t\t\"layerIid\": \"25677a31-3b70-11ee-9520-fb70df70bb82\",\n\t\t\t\t\t\t\t\t\t\"levelIid\": \"25677a30-3b70-11ee-9520-b9d97f9af617\",\n\t\t\t\t\t\t\t\t\t\"worldIid\": \"ec4f3a31-3b70-11ee-8c17-193a11797633\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\"entityIid\": \"4efc0230-3b70-11ee-9520-fb485affbbf4\",\n\t\t\t\t\t\t\t\t\t\"layerIid\": \"25677a31-3b70-11ee-9520-fb70df70bb82\",\n\t\t\t\t\t\t\t\t\t\"levelIid\": \"25677a30-3b70-11ee-9520-b9d97f9af617\",\n\t\t\t\t\t\t\t\t\t\"worldIid\": \"ec4f3a31-3b70-11ee-8c17-193a11797633\"\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t], \"__tile\": null, \"defUid\": 12, \"realEditorValues\": [ {\n\t\t\t\t\t\t\t\t\"id\": \"V_String\",\n\t\t\t\t\t\t\t\t\"params\": [\"25677a33-3b70-11ee-9520-510934e23f7a\"]\n\t\t\t\t\t\t\t}, {\n\t\t\t\t\t\t\t\t\"id\": \"V_String\",\n\t\t\t\t\t\t\t\t\"params\": [\"4e4d4ba0-3b70-11ee-9520-3de8e8c72939\"]\n\t\t\t\t\t\t\t}, {\n\t\t\t\t\t\t\t\t\"id\": \"V_String\",\n\t\t\t\t\t\t\t\t\"params\": [\"4efc0230-3b70-11ee-9520-fb485affbbf4\"]\n\t\t\t\t\t\t\t} ] }]\n\t\t\t\t\t\t},\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\"__identifier\": \"Door\",\n\t\t\t\t\t\t\t\"__grid\": [6,13],\n\t\t\t\t\t\t\t\"__pivot\": [0.5,0.5],\n\t\t\t\t\t\t\t\"__tags\": [\"Targets\"],\n\t\t\t\t\t\t\t\"__tile\": null,\n\t\t\t\t\t\t\t\"__smartColor\": \"#D77643\",\n\t\t\t\t\t\t\t\"__worldX\": 824,\n\t\t\t\t\t\t\t\"__worldY\": 216,\n\t\t\t\t\t\t\t\"iid\": \"25677a33-3b70-11ee-9520-510934e23f7a\",\n\t\t\t\t\t\t\t\"width\": 16,\n\t\t\t\t\t\t\t\"height\": 16,\n\t\t\t\t\t\t\t\"defUid\": 9,\n\t\t\t\t\t\t\t\"px\": [104,216],\n\t\t\t\t\t\t\t\"fieldInstances\": []\n\t\t\t\t\t\t},\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\"__identifier\": \"Door\",\n\t\t\t\t\t\t\t\"__grid\": [5,13],\n\t\t\t\t\t\t\t\"__pivot\": [0.5,0.5],\n\t\t\t\t\t\t\t\"__tags\": [\"Targets\"],\n\t\t\t\t\t\t\t\"__tile\": null,\n\t\t\t\t\t\t\t\"__smartColor\": \"#D77643\",\n\t\t\t\t\t\t\t\"__worldX\": 808,\n\t\t\t\t\t\t\t\"__worldY\": 216,\n\t\t\t\t\t\t\t\"iid\": \"4e4d4ba0-3b70-11ee-9520-3de8e8c72939\",\n\t\t\t\t\t\t\t\"width\": 16,\n\t\t\t\t\t\t\t\"height\": 16,\n\t\t\t\t\t\t\t\"defUid\": 9,\n\t\t\t\t\t\t\t\"px\": [88,216],\n\t\t\t\t\t\t\t\"fieldInstances\": []\n\t\t\t\t\t\t},\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\"__identifier\": \"Door\",\n\t\t\t\t\t\t\t\"__grid\": [4,13],\n\t\t\t\t\t\t\t\"__pivot\": [0.5,0.5],\n\t\t\t\t\t\t\t\"__tags\": [\"Targets\"],\n\t\t\t\t\t\t\t\"__tile\": null,\n\t\t\t\t\t\t\t\"__smartColor\": \"#D77643\",\n\t\t\t\t\t\t\t\"__worldX\": 792,\n\t\t\t\t\t\t\t\"__worldY\": 216,\n\t\t\t\t\t\t\t\"iid\": \"4efc0230-3b70-11ee-9520-fb485affbbf4\",\n\t\t\t\t\t\t\t\"width\": 16,\n\t\t\t\t\t\t\t\"height\": 16,\n\t\t\t\t\t\t\t\"defUid\": 9,\n\t\t\t\t\t\t\t\"px\": [72,216],\n\t\t\t\t\t\t\t\"fieldInstances\": []\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"__identifier\": \"IntGrid\",\n\t\t\t\t\t\"__type\": \"IntGrid\",\n\t\t\t\t\t\"__cWid\": 12,\n\t\t\t\t\t\"__cHei\": 18,\n\t\t\t\t\t\"__gridSize\": 16,\n\t\t\t\t\t\"__opacity\": 1,\n\t\t\t\t\t\"__pxTotalOffsetX\": 0,\n\t\t\t\t\t\"__pxTotalOffsetY\": 0,\n\t\t\t\t\t\"__tilesetDefUid\": null,\n\t\t\t\t\t\"__tilesetRelPath\": null,\n\t\t\t\t\t\"iid\": \"25677a34-3b70-11ee-9520-eb41850f5aa7\",\n\t\t\t\t\t\"levelId\": 11,\n\t\t\t\t\t\"layerDefUid\": 3,\n\t\t\t\t\t\"pxOffsetX\": 0,\n\t\t\t\t\t\"pxOffsetY\": 0,\n\t\t\t\t\t\"visible\": true,\n\t\t\t\t\t\"optionalRules\": [],\n\t\t\t\t\t\"intGridCsv\": [\n\t\t\t\t\t\t0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,\n\t\t\t\t\t\t0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,4,0,1,1,1,1,0,0,0,1,0,0,0,0,0,0,0,1,\n\t\t\t\t\t\t0,0,0,1,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,\n\t\t\t\t\t\t1,0,0,0,1,0,0,0,0,0,1,1,1,0,0,0,1,0,0,0,2,0,1,0,0,0,0,0,1,1,1,0,2,2,1,\n\t\t\t\t\t\t0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,3,3,3,\n\t\t\t\t\t\t0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,\n\t\t\t\t\t\t0,0,0,0,0,0\n\t\t\t\t\t],\n\t\t\t\t\t\"autoLayerTiles\": [],\n\t\t\t\t\t\"seed\": 2671766,\n\t\t\t\t\t\"overrideTilesetUid\": null,\n\t\t\t\t\t\"gridTiles\": [],\n\t\t\t\t\t\"entityInstances\": []\n\t\t\t\t}\n\t\t\t],\n\t\t\t\"__neighbours\": []\n\t\t}\n\t],\n\t\"worlds\": [],\n\t\"dummyWorldIid\": \"ec4f3a31-3b70-11ee-8c17-193a11797633\"\n}");
 };
 $hxClasses["LdtkProject"] = LdtkProject;
 LdtkProject.__name__ = "LdtkProject";
@@ -4328,9 +4328,11 @@ var Ldtk = function() { };
 $hxClasses["Ldtk"] = Ldtk;
 Ldtk.__name__ = "Ldtk";
 var LdtkProject_$EntityEnum = $hxEnums["LdtkProject_EntityEnum"] = { __ename__:true,__constructs__:null
+	,Switch: {_hx_name:"Switch",_hx_index:0,__enum__:"LdtkProject_EntityEnum",toString:$estr}
+	,Door: {_hx_name:"Door",_hx_index:1,__enum__:"LdtkProject_EntityEnum",toString:$estr}
 };
-LdtkProject_$EntityEnum.__constructs__ = [];
-LdtkProject_$EntityEnum.__empty_constructs__ = [];
+LdtkProject_$EntityEnum.__constructs__ = [LdtkProject_$EntityEnum.Switch,LdtkProject_$EntityEnum.Door];
+LdtkProject_$EntityEnum.__empty_constructs__ = [LdtkProject_$EntityEnum.Switch,LdtkProject_$EntityEnum.Door];
 var ldtk_Entity = function(p,json) {
 	this.untypedProject = p;
 	this.json = json;
@@ -4366,6 +4368,73 @@ LdtkProject_$Entity.prototype = $extend(ldtk_Entity.prototype,{
 	}
 	,__class__: LdtkProject_$Entity
 });
+var Entity_$Switch = function(p,json) {
+	LdtkProject_$Entity.call(this,p,json);
+};
+$hxClasses["Entity_Switch"] = Entity_$Switch;
+Entity_$Switch.__name__ = "Entity_Switch";
+Entity_$Switch.__super__ = LdtkProject_$Entity;
+Entity_$Switch.prototype = $extend(LdtkProject_$Entity.prototype,{
+	__class__: Entity_$Switch
+});
+var Entity_$Door = function(p,json) {
+	LdtkProject_$Entity.call(this,p,json);
+};
+$hxClasses["Entity_Door"] = Entity_$Door;
+Entity_$Door.__name__ = "Entity_Door";
+Entity_$Door.__super__ = LdtkProject_$Entity;
+Entity_$Door.prototype = $extend(LdtkProject_$Entity.prototype,{
+	__class__: Entity_$Door
+});
+var ldtk_Tileset = function(p,json) {
+	this.json = json;
+	this.untypedProject = p;
+	this.identifier = json.identifier;
+	this.tileGridSize = json.tileGridSize;
+	this.relPath = json.relPath;
+	this.pxWid = json.pxWid;
+	this.pxHei = json.pxHei;
+	this.padding = json.padding;
+	this.spacing = json.spacing;
+	this.untypedTags = new haxe_ds_StringMap();
+	if(json.enumTags != null) {
+		var _g = 0;
+		var _g1 = json.enumTags;
+		while(_g < _g1.length) {
+			var t = _g1[_g];
+			++_g;
+			var this1 = this.untypedTags;
+			var key = p.capitalize(t.enumValueId);
+			this1.h[key] = new haxe_ds_IntMap();
+			var _g2 = 0;
+			var _g3 = t.tileIds;
+			while(_g2 < _g3.length) {
+				var tid = _g3[_g2];
+				++_g2;
+				var this2 = this.untypedTags;
+				var key1 = p.capitalize(t.enumValueId);
+				this2.h[key1].h[tid] = tid;
+			}
+		}
+	}
+};
+$hxClasses["ldtk.Tileset"] = ldtk_Tileset;
+ldtk_Tileset.__name__ = "ldtk.Tileset";
+ldtk_Tileset.prototype = {
+	toString: function() {
+		return "ldtk.Tileset[#" + this.identifier + ", path=" + this.relPath + "]";
+	}
+	,__class__: ldtk_Tileset
+};
+var Tileset_$Internal_$Icons = function(p,json) {
+	ldtk_Tileset.call(this,p,json);
+};
+$hxClasses["Tileset_Internal_Icons"] = Tileset_$Internal_$Icons;
+Tileset_$Internal_$Icons.__name__ = "Tileset_Internal_Icons";
+Tileset_$Internal_$Icons.__super__ = ldtk_Tileset;
+Tileset_$Internal_$Icons.prototype = $extend(ldtk_Tileset.prototype,{
+	__class__: Tileset_$Internal_$Icons
+});
 var ldtk_Layer = function(p,json) {
 	this.json = json;
 	this.defJson = p.getLayerDefJson(json.layerDefUid);
@@ -4397,6 +4466,52 @@ ldtk_Layer.prototype = {
 	}
 	,__class__: ldtk_Layer
 };
+var ldtk_Layer_$Entities = function(p,json) {
+	this._entities = [];
+	ldtk_Layer.call(this,p,json);
+	var _g = 0;
+	var _g1 = json.entityInstances;
+	while(_g < _g1.length) {
+		var e = this._instanciateEntity(_g1[_g++]);
+		this._entities.push(e);
+		if(Reflect.field(this,"all_" + e.identifier) == null) {
+			this["all_" + e.identifier] = [];
+		}
+		Reflect.field(this,"all_" + e.identifier).push(e);
+	}
+};
+$hxClasses["ldtk.Layer_Entities"] = ldtk_Layer_$Entities;
+ldtk_Layer_$Entities.__name__ = "ldtk.Layer_Entities";
+ldtk_Layer_$Entities.__super__ = ldtk_Layer;
+ldtk_Layer_$Entities.prototype = $extend(ldtk_Layer.prototype,{
+	_instanciateEntity: function(json) {
+		return null;
+	}
+	,__class__: ldtk_Layer_$Entities
+});
+var Layer_$Entities = function(p,json) {
+	this["all_Switch"] = [];
+	this["all_Door"] = [];
+	ldtk_Layer_$Entities.call(this,p,json);
+};
+$hxClasses["Layer_Entities"] = Layer_$Entities;
+Layer_$Entities.__name__ = "Layer_Entities";
+Layer_$Entities.__super__ = ldtk_Layer_$Entities;
+Layer_$Entities.prototype = $extend(ldtk_Layer_$Entities.prototype,{
+	_instanciateEntity: function(json) {
+		var name = "Entity_" + json.__identifier;
+		var c = $hxClasses[name];
+		if(c == null) {
+			return null;
+		} else {
+			return Type.createInstance(c,[this.untypedProject,json]);
+		}
+	}
+	,getAllUntyped: function() {
+		return this._entities;
+	}
+	,__class__: Layer_$Entities
+});
 var ldtk_Layer_$IntGrid = function(p,json) {
 	this.intGrid = new haxe_ds_IntMap();
 	this.valueInfos = new haxe_ds_IntMap();
@@ -4561,12 +4676,16 @@ LdtkProject_$Level.prototype = $extend(ldtk_Level.prototype,{
 		}
 		return null;
 	}
+	,get_l_Entities: function() {
+		this.load();
+		return Reflect.field(this,"l_Entities");
+	}
 	,get_l_IntGrid: function() {
 		this.load();
 		return Reflect.field(this,"l_IntGrid");
 	}
 	,__class__: LdtkProject_$Level
-	,__properties__: {get_l_IntGrid:"get_l_IntGrid"}
+	,__properties__: {get_l_IntGrid:"get_l_IntGrid",get_l_Entities:"get_l_Entities"}
 });
 var ldtk_World = function(project,arrayIdx,json) {
 	this.untypedProject = project;
@@ -4716,13 +4835,16 @@ MenuView.prototype = $extend(GameState.prototype,{
 var Cell = $hxEnums["Cell"] = { __ename__:true,__constructs__:null
 	,Empty: {_hx_name:"Empty",_hx_index:0,__enum__:"Cell",toString:$estr}
 	,Wall: {_hx_name:"Wall",_hx_index:1,__enum__:"Cell",toString:$estr}
-	,Slime: ($_=function(groupId) { return {_hx_index:2,groupId:groupId,__enum__:"Cell",toString:$estr}; },$_._hx_name="Slime",$_.__params__ = ["groupId"],$_)
-	,Exit: {_hx_name:"Exit",_hx_index:3,__enum__:"Cell",toString:$estr}
+	,Door: {_hx_name:"Door",_hx_index:2,__enum__:"Cell",toString:$estr}
+	,Switch: ($_=function(targets) { return {_hx_index:3,targets:targets,__enum__:"Cell",toString:$estr}; },$_._hx_name="Switch",$_.__params__ = ["targets"],$_)
+	,Slime: ($_=function(groupId) { return {_hx_index:4,groupId:groupId,__enum__:"Cell",toString:$estr}; },$_._hx_name="Slime",$_.__params__ = ["groupId"],$_)
+	,Exit: {_hx_name:"Exit",_hx_index:5,__enum__:"Cell",toString:$estr}
 };
-Cell.__constructs__ = [Cell.Empty,Cell.Wall,Cell.Slime,Cell.Exit];
-Cell.__empty_constructs__ = [Cell.Empty,Cell.Wall,Cell.Exit];
+Cell.__constructs__ = [Cell.Empty,Cell.Wall,Cell.Door,Cell.Switch,Cell.Slime,Cell.Exit];
+Cell.__empty_constructs__ = [Cell.Empty,Cell.Wall,Cell.Door,Cell.Exit];
 var PlayView = function(level) {
 	this.timeSinceLastUpdate = 0.0;
+	this.targetEntities = new haxe_ds_StringMap();
 	this.slimeGroups = [];
 	var _g = [];
 	var _g1 = 0;
@@ -4748,6 +4870,16 @@ var PlayView = function(level) {
 };
 $hxClasses["PlayView"] = PlayView;
 PlayView.__name__ = "PlayView";
+PlayView.isFree = function(cell) {
+	switch(cell._hx_index) {
+	case 3:
+		return true;
+	case 0:case 5:
+		return true;
+	default:
+		return false;
+	}
+};
 PlayView.__super__ = GameState;
 PlayView.prototype = $extend(GameState.prototype,{
 	init: function() {
@@ -4845,6 +4977,23 @@ PlayView.prototype = $extend(GameState.prototype,{
 				}
 			}
 		}
+		var _g = 0;
+		var _this = this.ldtkLevel;
+		_this.load();
+		var _g1 = Reflect.field(_this,"l_Entities")._entities;
+		while(_g < _g1.length) {
+			var entity = _g1[_g];
+			++_g;
+			switch(entity.entityType._hx_index) {
+			case 0:
+				this.grid[entity.cx][entity.cy] = Cell.Switch(entity.f_Targets);
+				break;
+			case 1:
+				this.grid[entity.cx][entity.cy] = Cell.Door;
+				this.targetEntities.h[entity.iid] = new h2d_col_IPoint(entity.cx,entity.cy);
+				break;
+			}
+		}
 		this.makeSlimeGroups();
 	}
 	,makeSlimeGroups: function() {
@@ -4852,7 +5001,7 @@ PlayView.prototype = $extend(GameState.prototype,{
 		var floodFill = null;
 		floodFill = function(x,y,groupId) {
 			var _g = _gthis.grid[x][y];
-			if(!(_g._hx_index == 2 && _g.groupId == -1)) {
+			if(!(_g._hx_index == 4 && _g.groupId == -1)) {
 				return;
 			}
 			_gthis.grid[x][y] = Cell.Slime(groupId);
@@ -4877,7 +5026,7 @@ PlayView.prototype = $extend(GameState.prototype,{
 			while(_g2 < _g3) {
 				var y = _g2++;
 				var _g4 = this.grid[x][y];
-				if(_g4._hx_index == 2) {
+				if(_g4._hx_index == 4) {
 					if(_g4.groupId == -1) {
 						this.slimeGroups.push([]);
 						floodFill(x,y,this.slimeGroups.length - 1);
@@ -4927,7 +5076,7 @@ PlayView.prototype = $extend(GameState.prototype,{
 		while(p.hasNext()) {
 			var p1 = p.next();
 			var p2 = Utils.toIPoint(p1);
-			if(!this.isPointInBoard(new h2d_col_IPoint(newPos.x + p2.x,newPos.y + p2.y)) || PlayView.FREE_CELLS.indexOf(this.grid[newPos.x + p1.x][newPos.y + p1.y]) == -1) {
+			if(!this.isPointInBoard(new h2d_col_IPoint(newPos.x + p2.x,newPos.y + p2.y)) || !PlayView.isFree(this.grid[newPos.x + p1.x][newPos.y + p1.y])) {
 				return;
 			}
 			var p3 = Utils.toIPoint(p1);
@@ -4941,7 +5090,7 @@ PlayView.prototype = $extend(GameState.prototype,{
 			}
 			if(this.isPointInBoard(new h2d_col_IPoint(x + diff.x,y + diff.y))) {
 				var _g = this.grid[newPos.x + p1.x + diff.x][newPos.y + p1.y + diff.y];
-				if(_g._hx_index == 2) {
+				if(_g._hx_index == 4) {
 					var _g1 = 0;
 					var _g2 = this.slimeGroups[_g.groupId];
 					while(_g1 < _g2.length) {
@@ -4951,8 +5100,25 @@ PlayView.prototype = $extend(GameState.prototype,{
 					}
 				}
 			}
-			if(this.grid[newPos.x + p1.x][newPos.y + p1.y] == Cell.Exit) {
+			var _g3 = this.grid[newPos.x + p1.x][newPos.y + p1.y];
+			switch(_g3._hx_index) {
+			case 3:
+				var _g4 = _g3.targets;
+				var _g5 = 0;
+				while(_g5 < _g4.length) {
+					var pt = this.targetEntities.h[_g4[_g5++].entityIid];
+					var _g6 = this.grid[pt.x][pt.y];
+					if(_g6._hx_index == 2) {
+						this.grid[pt.x][pt.y] = Cell.Empty;
+					} else {
+						haxe_Log.trace("WARNING: invalid target type " + Std.string(_g6),{ fileName : "src/PlayView.hx", lineNumber : 215, className : "PlayView", methodName : "movePlayer"});
+					}
+				}
+				break;
+			case 5:
 				this.win();
+				break;
+			default:
 			}
 		}
 		var _g = 0;
@@ -4978,7 +5144,7 @@ PlayView.prototype = $extend(GameState.prototype,{
 			this.tick();
 		}
 		this.gameArea.clear();
-		this.gameArea.beginFill(7433395);
+		this.gameArea.beginFill(12565503);
 		this.gameArea.drawRect(0,0,PlayView.BOARD_WIDTH,PlayView.BOARD_HEIGHT);
 		var _g = 0;
 		var _g1 = PlayView.BOARD_WIDTH;
@@ -4996,10 +5162,18 @@ PlayView.prototype = $extend(GameState.prototype,{
 					this.gameArea.drawRect(x,y,1,1);
 					break;
 				case 2:
-					this.gameArea.beginFill(2251069);
+					this.gameArea.beginFill(9597490);
 					this.gameArea.drawRect(x,y,1,1);
 					break;
 				case 3:
+					this.gameArea.beginFill(11866128);
+					this.gameArea.drawRect(x,y,1,1);
+					break;
+				case 4:
+					this.gameArea.beginFill(2251069);
+					this.gameArea.drawRect(x,y,1,1);
+					break;
+				case 5:
 					break;
 				}
 			}
@@ -47101,46 +47275,6 @@ ldtk_Point.__name__ = "ldtk.Point";
 ldtk_Point.prototype = {
 	__class__: ldtk_Point
 };
-var ldtk_Tileset = function(p,json) {
-	this.json = json;
-	this.untypedProject = p;
-	this.identifier = json.identifier;
-	this.tileGridSize = json.tileGridSize;
-	this.relPath = json.relPath;
-	this.pxWid = json.pxWid;
-	this.pxHei = json.pxHei;
-	this.padding = json.padding;
-	this.spacing = json.spacing;
-	this.untypedTags = new haxe_ds_StringMap();
-	if(json.enumTags != null) {
-		var _g = 0;
-		var _g1 = json.enumTags;
-		while(_g < _g1.length) {
-			var t = _g1[_g];
-			++_g;
-			var this1 = this.untypedTags;
-			var key = p.capitalize(t.enumValueId);
-			this1.h[key] = new haxe_ds_IntMap();
-			var _g2 = 0;
-			var _g3 = t.tileIds;
-			while(_g2 < _g3.length) {
-				var tid = _g3[_g2];
-				++_g2;
-				var this2 = this.untypedTags;
-				var key1 = p.capitalize(t.enumValueId);
-				this2.h[key1].h[tid] = tid;
-			}
-		}
-	}
-};
-$hxClasses["ldtk.Tileset"] = ldtk_Tileset;
-ldtk_Tileset.__name__ = "ldtk.Tileset";
-ldtk_Tileset.prototype = {
-	toString: function() {
-		return "ldtk.Tileset[#" + this.identifier + ", path=" + this.relPath + "]";
-	}
-	,__class__: ldtk_Tileset
-};
 var motion_actuators_IGenericActuator = function() { };
 $hxClasses["motion.actuators.IGenericActuator"] = motion_actuators_IGenericActuator;
 motion_actuators_IGenericActuator.__name__ = "motion.actuators.IGenericActuator";
@@ -48012,7 +48146,6 @@ Ldtk.proj = new LdtkProject();
 Ldtk.world = Ldtk.proj.all_worlds.Default;
 PlayView.BOARD_WIDTH = 12;
 PlayView.BOARD_HEIGHT = 18;
-PlayView.FREE_CELLS = [Cell.Empty,Cell.Exit];
 Xml.Element = 0;
 Xml.PCData = 1;
 Xml.CData = 2;
