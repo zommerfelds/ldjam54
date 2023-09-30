@@ -1,10 +1,3 @@
-import box2D.collision.shapes.B2EdgeShape;
-import box2D.common.math.B2Vec2;
-import box2D.dynamics.B2BodyDef;
-import box2D.dynamics.B2FixtureDef;
-import box2D.dynamics.B2World;
-import h2d.col.Point;
-
 enum State {
 	WaitingForTouch;
 	Playing;
@@ -47,8 +40,6 @@ class PlayView extends GameState {
 
 	static final BOX2D_VELOCITY_ITERATIONS = 8;
 	static final BOX2D_POSITION_ITERATIONS = 3;
-
-	final b2World = new B2World(new B2Vec2(0, 10.0), true);
 
 	override function init() {
 		if (height / width > playHeight / playWidth) {
@@ -100,13 +91,6 @@ class PlayView extends GameState {
 	}
 
 	override function update(dt:Float) {
-		// TODO: consider a fixed time step (or make it explicit).
-		b2World.step(dt, BOX2D_VELOCITY_ITERATIONS, BOX2D_POSITION_ITERATIONS);
-		// It seems like this version of Box2D doesn't auto-clear forces.
-		// https://box2d.org/documentation/classb2_world.html#aa2bced28ddef5bbb00ed5666e5e9f620
-		// https://stackoverflow.com/a/14495543/3810493
-		b2World.clearForces();
-
 		timeSinceLastUpdate += dt;
 
 		final step = 0.5;
@@ -158,9 +142,5 @@ class PlayView extends GameState {
 				y--;
 			}
 		}
-	}
-
-	public static function toB2Vec2(pt:{x:Float, y:Float}) {
-		return new B2Vec2(pt.x, pt.y);
 	}
 }

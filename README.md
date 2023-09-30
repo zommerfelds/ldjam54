@@ -1,9 +1,9 @@
-# My entry for 1-BIT JAM 2023
+# My entry for Ludum Dare 54
 
-Live demo: https://zommerfelds.github.io/1-bit-jam-2023/
+Live demo: https://zommerfelds.github.io/ldjam54/
 
-Game jam site: https://itch.io/jam/1-bit-jam-wow
+Game jam site: https://ldjam.com/users/christian-zommerfelds/games
 
 My game jam template: https://github.com/zommerfelds/gamejam-template
 
-Online IDE: https://gitpod.io/#https://github.com/zommerfelds/1-bit-jam-2023
+Online IDE: https://gitpod.io/#https://github.com/zommerfelds/ldjam54
