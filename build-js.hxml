@@ -7,7 +7,6 @@
 
 -lib heaps:1.10.0
 -lib actuate:1.9.0
--lib box2d:git:https://github.com/openfl/box2d.git#4114476e4d558ca2e43f45d6222a74aded142e2f
 
 -D js-source-map
 -D no-deprecation-warnings

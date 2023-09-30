@@ -2,6 +2,29 @@ import h2d.col.IPoint;
 import h2d.col.Point;
 import motion.Actuate;
 
+/** A 2D integer point that can be put in a HashMap. **/
+class Point2d {
+	public function new(x = 0, y = 0) {
+		this.x = x;
+		this.y = y;
+	}
+
+	public var x:Int;
+	public var y:Int;
+
+	// Can't go too high to have perfect pairing (probably good to stay under a magnitude of 5000).
+	public function hashCode() {
+		// https://gist.github.com/TheGreatRambler/048f4b38ca561e6566e0e0f6e71b7739
+		var xx = x >= 0 ? x * 2 : x * -2 - 1;
+		var yy = y >= 0 ? y * 2 : y * -2 - 1;
+		return (xx >= yy) ? (xx * xx + xx + yy) : (yy * yy + xx);
+	}
+
+	public function toString() {
+		return '$x/$y';
+	}
+}
+
 class Utils {
 	public static function floatToStr(n:Float, prec = 3) {
 		n = Math.round(n * Math.pow(10, prec));
