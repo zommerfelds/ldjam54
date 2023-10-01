@@ -1,4 +1,9 @@
-# My entry for Ludum Dare 54
+# Free The Slime! - Entry for Ludum Dare 54
+
+A game made in 48h.
+
+![screen recording](anim.gif)
+![screen recording](anim2.gif)
 
 Live demo: https://zommerfelds.github.io/ldjam54/
 
