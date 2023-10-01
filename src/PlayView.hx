@@ -1,3 +1,4 @@
+import Utils.Int2d;
 import Gui.TextButton;
 import LdtkProject.Ldtk;
 import PlayViewLogic.Model;
@@ -17,7 +18,40 @@ using hx.strings.Strings;
 class View {
 	public function new() {}
 
-	public final batchElements = new HashMap<Point2d, BatchElement>();
+	public function addBatchElement(i:Int2d, el:BatchElement) {
+		final p = new Point2d(i.x, i.y);
+		if (batchElements.get(p) == null) {
+			batchElements.set(p, []);
+		}
+		batchElements.get(p).push(el);
+	}
+
+	// TODO: remove?
+
+	/*
+		public function getBatchElement(i:Int2d) {
+			final p = new Point2d(i.x, i.y);
+			if (batchElements.get(p) == null) {
+				batchElements.set(p, []);
+			}
+			return batchElements.get(p);
+		}
+	 */
+	public function removeBatchElements(i:Int2d) {
+		final p = new Point2d(i.x, i.y);
+		if (batchElements.get(p) == null) {
+			return;
+		}
+		for (el in batchElements.get(p)) {
+			el.remove();
+		}
+		batchElements.remove(p);
+	}
+
+	final batchElements = new HashMap<Point2d, Array<BatchElement>>();
+
+	public final togglingBatchElements:Array<Array<BatchElement>> = [];
+	public var timeSinceLastSwap = 0.0;
 }
 
 class PlayView extends GameState {
@@ -27,8 +61,8 @@ class PlayView extends GameState {
 	final tiles = loadTileMap();
 	var spriteBatch:SpriteBatch;
 	var playerSpriteBatch:SpriteBatch;
-	final slimeTiles:Map<String, {tile:Tile, r:Int}> = [];
-	final playerSlimeTiles:Map<String, {tile:Tile, r:Int}> = [];
+	final slimeTiles:Map<String, {tiles:Array<Tile>, r:Int}> = [];
+	final playerSlimeTiles:Map<String, {tiles:Array<Tile>, r:Int}> = [];
 
 	final ldtkLevel:Null<LdtkProject.LdtkProject_Level>;
 	final levelIndex:Int;
@@ -83,16 +117,26 @@ class PlayView extends GameState {
 			"LRU" => {x: 3, r: 3}, "DU" => {x: 4, r: 0}, "LR" => {x: 4, r: 1}, "DLRU" => {x: 5, r: 0},
 		];
 		for (kv in tileData.keyValueIterator()) {
-			final tile = allSprites.sub(kv.value.x * 8, 8 * 8, 8, 8);
-			tile.scaleToSize(1, 1);
-			tile.setCenterRatio();
-			slimeTiles.set(kv.key, {tile: tile, r: kv.value.r});
+			final tiles = [
+				allSprites.sub(kv.value.x * 8, 8 * 8, 8, 8),
+				allSprites.sub(kv.value.x * 8, 9 * 8, 8, 8)
+			];
+			for (tile in tiles) {
+				tile.scaleToSize(1, 1);
+				tile.setCenterRatio();
+			}
+			slimeTiles.set(kv.key, {tiles: tiles, r: kv.value.r});
 		}
 		for (kv in tileData.keyValueIterator()) {
-			final tile = allSprites.sub(kv.value.x * 8, 0, 8, 8);
-			tile.scaleToSize(1, 1);
-			tile.setCenterRatio();
-			playerSlimeTiles.set(kv.key, {tile: tile, r: kv.value.r});
+			final tiles = [
+				allSprites.sub(kv.value.x * 8, 0 * 8, 8, 8),
+				allSprites.sub(kv.value.x * 8, 1 * 8, 8, 8)
+			];
+			for (tile in tiles) {
+				tile.scaleToSize(1, 1);
+				tile.setCenterRatio();
+			}
+			playerSlimeTiles.set(kv.key, {tiles: tiles, r: kv.value.r});
 		}
 		spriteBatch = new SpriteBatch(allSprites, gameArea);
 		spriteBatch.hasRotationScale = true;
@@ -109,7 +153,7 @@ class PlayView extends GameState {
 			final el = spriteBatch.add(new BatchElement(tiles["door"]));
 			el.x = d.x;
 			el.y = d.y;
-			view.batchElements.set(new Point2d(d.x, d.y), el);
+			view.addBatchElement(d, el);
 		}
 		for (s in model.switches) {
 			staticTileGroup.add(s.x, s.y, tiles["switch"]);
@@ -122,18 +166,14 @@ class PlayView extends GameState {
 
 		model.onPlayerMergedWithSlime.add(slimeGroupId -> {
 			for (s in model.slimeGroups[slimeGroupId]) {
-				final p = new Point2d(s.x, s.y);
-				view.batchElements.get(p).remove();
-				view.batchElements.remove(p);
+				view.removeBatchElements(s);
 			}
 
 			rebuildPlayerSprites();
 		});
 
 		model.onRemoveDoor.add(pos -> {
-			final pt2d = new Point2d(pos.x, pos.y);
-			view.batchElements.get(pt2d).remove();
-			view.batchElements.remove(pt2d);
+			view.removeBatchElements(pos);
 		});
 
 		model.onWin.add(win);
@@ -154,11 +194,17 @@ class PlayView extends GameState {
 						}
 						neighbourDirs.sort((s1, s2) -> s1.compare(s2));
 						final tileName = neighbourDirs.join("");
-						final el = spriteBatch.add(new BatchElement(slimeTiles.get(tileName).tile));
-						el.rotation = slimeTiles.get(tileName).r * Math.PI * 0.5;
-						el.x = x;
-						el.y = y;
-						view.batchElements.set(new Point2d(x, y), el);
+						final els = [];
+						for (tile in slimeTiles.get(tileName).tiles) {
+							final el = spriteBatch.add(new BatchElement(tile));
+							el.rotation = slimeTiles.get(tileName).r * Math.PI * 0.5;
+							el.x = x;
+							el.y = y;
+							view.addBatchElement(new Point2d(x, y), el);
+							els.push(el);
+						}
+						els[1].visible = false;
+						view.togglingBatchElements.push(els);
 					case _:
 				}
 			}
@@ -193,6 +239,37 @@ class PlayView extends GameState {
 		App.instance.switchState(new PlayView(levelIndex + 1));
 	}
 
+	function rebuildPlayerSprites() {
+		playerSpriteBatch.clear();
+
+		for (p in model.playerGrid.keys()) {
+			final pt = new IPoint(p.x, p.y);
+			final neighbourDirs = [];
+			for (d in Model.ADJACENT_DIRECTIONS_MAP.keyValueIterator()) {
+				final neighbour = pt.add(d.value);
+				if (!model.isPointInBoard(neighbour))
+					continue;
+				if (model.playerGrid.exists(new Point2d(neighbour.x, neighbour.y))) {
+					neighbourDirs.push(d.key);
+				}
+			}
+			neighbourDirs.sort((s1, s2) -> s1.compare(s2));
+			final tileName = neighbourDirs.join("");
+
+			final els = [];
+			for (tile in playerSlimeTiles.get(tileName).tiles) {
+				final el = playerSpriteBatch.add(new BatchElement(tile));
+				el.rotation = playerSlimeTiles.get(tileName).r * Math.PI * 0.5;
+				el.x = pt.x;
+				el.y = pt.y;
+				view.addBatchElement(pt, el);
+				els.push(el);
+			}
+			els[1].visible = false;
+			view.togglingBatchElements.push(els);
+		}
+	}
+
 	function onEvent(event:hxd.Event) {
 		var moveDiff:Option<IPoint> = None;
 		switch (event.kind) {
@@ -219,29 +296,6 @@ class PlayView extends GameState {
 		}
 	}
 
-	function rebuildPlayerSprites() {
-		playerSpriteBatch.clear();
-
-		for (p in model.playerGrid.keys()) {
-			final pt = new IPoint(p.x, p.y);
-			final neighbourDirs = [];
-			for (d in Model.ADJACENT_DIRECTIONS_MAP.keyValueIterator()) {
-				final neighbour = pt.add(d.value);
-				if (!model.isPointInBoard(neighbour))
-					continue;
-				if (model.playerGrid.exists(new Point2d(neighbour.x, neighbour.y))) {
-					neighbourDirs.push(d.key);
-				}
-			}
-			neighbourDirs.sort((s1, s2) -> s1.compare(s2));
-			final tileName = neighbourDirs.join("");
-			final el = playerSpriteBatch.add(new BatchElement(playerSlimeTiles.get(tileName).tile));
-			el.rotation = playerSlimeTiles.get(tileName).r * Math.PI * 0.5;
-			el.x = pt.x;
-			el.y = pt.y;
-		}
-	}
-
 	override function update(dt:Float) {
 		timeSinceLastUpdate += dt;
 
@@ -249,6 +303,17 @@ class PlayView extends GameState {
 		while (timeSinceLastUpdate > step) {
 			timeSinceLastUpdate -= step;
 			tick();
+		}
+
+		view.timeSinceLastSwap += dt;
+		final swapTime = 0.3;
+		if (view.timeSinceLastSwap >= swapTime) {
+			view.timeSinceLastSwap -= swapTime;
+
+			for (t in view.togglingBatchElements) {
+				t[0].visible = !t[0].visible;
+				t[1].visible = !t[1].visible;
+			}
 		}
 	}
 

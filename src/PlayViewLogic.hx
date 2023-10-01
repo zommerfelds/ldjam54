@@ -3,9 +3,9 @@ import h2d.col.IPoint;
 import haxe.ds.HashMap;
 import haxe.ds.IntMap;
 import haxe.ds.StringMap;
-import ldtk.Json.EntityReferenceInfos;
 import signals.Signal1;
 import signals.Signal;
+import ldtk.Json.EntityReferenceInfos;
 
 using hx.strings.Strings;
 

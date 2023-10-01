@@ -2,6 +2,8 @@ import h2d.col.IPoint;
 import h2d.col.Point;
 import motion.Actuate;
 
+typedef Int2d = {x:Int, y:Int}
+
 /** A 2D integer point that can be put in a HashMap. **/
 class Point2d {
 	public function new(x = 0, y = 0) {
