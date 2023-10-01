@@ -274,7 +274,6 @@ class PlayView extends GameState {
 				el.rotation = playerSlimeTiles.get(tileName).r * Math.PI * 0.5;
 				el.x = pt.x;
 				el.y = pt.y;
-				view.addBatchElement(pt, el);
 				els.push(el);
 			}
 			els[Std.random(2)].visible = false;

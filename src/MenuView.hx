@@ -12,8 +12,8 @@ class MenuView extends GameState {
 		centeringFlow.layout = Vertical;
 		centeringFlow.verticalSpacing = Gui.scaleAsInt(50);
 
-		new Gui.Text("Wellcome to...", centeringFlow, 0.8);
-		new Gui.Text("Sticky Block", centeringFlow);
+		new Gui.Text("Wellcome to...", centeringFlow, 0.5);
+		new Gui.Text("Free The Slime!", centeringFlow);
 
 		centeringFlow.addSpacing(Gui.scaleAsInt(100));
 
