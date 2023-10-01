@@ -1,3 +1,4 @@
+import Gui.Text;
 import h2d.Graphics;
 import motion.easing.Expo;
 import motion.easing.Quad;
@@ -241,6 +242,7 @@ class PlayView extends GameState {
 		flow.layout = Vertical;
 		new TextButton(flow, "Back [TAB]", back, Gui.Colors.GREY, false, 0.4);
 		new TextButton(flow, "Reset [BACKSPACE]", reset, Gui.Colors.RED, false, 0.4);
+		new Text("Press arrow keys to move.", flow, 0.4);
 
 		overlayTransition(1.0, false, false);
 
