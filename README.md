@@ -7,7 +7,7 @@ A game made in 48h.
 
 Live demo: https://zommerfelds.github.io/ldjam54/
 
-Game jam site: https://ldjam.com/users/christian-zommerfelds/games
+Game jam site: https://ldjam.com/events/ludum-dare/54/free-the-slime
 
 My game jam template: https://github.com/zommerfelds/gamejam-template
 
