@@ -26,17 +26,6 @@ class View {
 		batchElements.get(p).push(el);
 	}
 
-	// TODO: remove?
-
-	/*
-		public function getBatchElement(i:Int2d) {
-			final p = new Point2d(i.x, i.y);
-			if (batchElements.get(p) == null) {
-				batchElements.set(p, []);
-			}
-			return batchElements.get(p);
-		}
-	 */
 	public function removeBatchElements(i:Int2d) {
 		final p = new Point2d(i.x, i.y);
 		if (batchElements.get(p) == null) {
@@ -49,6 +38,8 @@ class View {
 	}
 
 	final batchElements = new HashMap<Point2d, Array<BatchElement>>();
+
+	public final eyes:Array<BatchElement> = [];
 
 	public final togglingBatchElements:Array<Array<BatchElement>> = [];
 	public var timeSinceLastSwap = 0.0;
@@ -87,7 +78,13 @@ class PlayView extends GameState {
 			t.setCenterRatio();
 			return t;
 		}
-		return ["switch" => get(6, 3), "door" => get(6, 4)];
+		return [
+			"switch" => get(6, 3),
+			"door" => get(6, 4),
+			"eyes0" => get(0, 2),
+			"eyes1" => get(1, 2),
+			"eyes2" => get(2, 2)
+		];
 	}
 
 	override function init() {
@@ -203,7 +200,7 @@ class PlayView extends GameState {
 							view.addBatchElement(new Point2d(x, y), el);
 							els.push(el);
 						}
-						els[1].visible = false;
+						els[Std.random(2)].visible = false;
 						view.togglingBatchElements.push(els);
 					case _:
 				}
@@ -242,12 +239,15 @@ class PlayView extends GameState {
 	function rebuildPlayerSprites() {
 		playerSpriteBatch.clear();
 
+		final pts = [];
 		for (p in model.playerGrid.keys()) {
 			final pt = new IPoint(p.x, p.y);
+			pts.push(pt);
+
 			final neighbourDirs = [];
 			for (d in Model.ADJACENT_DIRECTIONS_MAP.keyValueIterator()) {
 				final neighbour = pt.add(d.value);
-				if (!model.isPointInBoard(neighbour))
+				if (!model.isPointInBoard(neighbour.add(model.playerPos)))
 					continue;
 				if (model.playerGrid.exists(new Point2d(neighbour.x, neighbour.y))) {
 					neighbourDirs.push(d.key);
@@ -255,6 +255,7 @@ class PlayView extends GameState {
 			}
 			neighbourDirs.sort((s1, s2) -> s1.compare(s2));
 			final tileName = neighbourDirs.join("");
+			trace('tileName: $tileName');
 
 			final els = [];
 			for (tile in playerSlimeTiles.get(tileName).tiles) {
@@ -265,8 +266,18 @@ class PlayView extends GameState {
 				view.addBatchElement(pt, el);
 				els.push(el);
 			}
-			els[1].visible = false;
+			els[Std.random(2)].visible = false;
 			view.togglingBatchElements.push(els);
+		}
+
+		final eyePt = pts[Std.random(pts.length)];
+		view.eyes.splice(0, view.eyes.length);
+		for (s in ["eyes0", "eyes1", "eyes2"]) {
+			final el = playerSpriteBatch.add(new BatchElement(tiles[s]));
+			el.x = eyePt.x;
+			el.y = eyePt.y;
+			el.visible = s == "eyes2";
+			view.eyes.push(el);
 		}
 	}
 
@@ -313,6 +324,26 @@ class PlayView extends GameState {
 			for (t in view.togglingBatchElements) {
 				t[0].visible = !t[0].visible;
 				t[1].visible = !t[1].visible;
+			}
+		}
+
+		if (view.eyes[0].visible) {
+			if (Math.random() < 0.01) {
+				view.eyes[1].visible = true;
+				view.eyes[0].visible = false;
+			}
+		} else if (view.eyes[1].visible) {
+			if (Math.random() < 0.2) {
+				view.eyes[0].visible = true;
+				view.eyes[1].visible = false;
+			} else if (Math.random() < 0.05) {
+				view.eyes[2].visible = true;
+				view.eyes[1].visible = false;
+			}
+		} else if (view.eyes[2].visible) {
+			if (Math.random() < 0.1) {
+				view.eyes[1].visible = true;
+				view.eyes[2].visible = false;
 			}
 		}
 	}
