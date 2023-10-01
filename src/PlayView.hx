@@ -101,6 +101,7 @@ class PlayView extends GameState {
 		addChild(gameArea);
 
 		final ldtkTileGroup = ldtkLevel.l_AutoLayer.render();
+		ldtkLevel.l_Cosmetics.render(ldtkTileGroup);
 		ldtkTileGroup.scale(1 / 8);
 		gameArea.addChild(ldtkTileGroup);
 		gameArea.addChild(staticTileGroup);
@@ -173,7 +174,7 @@ class PlayView extends GameState {
 		new TextButton(flow, "Back", () -> {
 			App.instance.switchState(new MenuView());
 		}, Gui.Colors.GREY, false, 0.4);
-		new TextButton(flow, "Reset", () -> {
+		new TextButton(flow, "Reset [Backspace]", () -> {
 			reset();
 		}, Gui.Colors.RED, false, 0.4);
 
