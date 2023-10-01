@@ -1,3 +1,9 @@
+import motion.easing.Expo;
+import motion.easing.Quad;
+import motion.easing.Elastic;
+import motion.easing.Bounce;
+import motion.easing.Cubic;
+import motion.Actuate;
 import Utils.Int2d;
 import Gui.TextButton;
 import LdtkProject.Ldtk;
@@ -156,17 +162,23 @@ class PlayView extends GameState {
 			staticTileGroup.add(s.x, s.y, tiles["switch"]);
 		}
 
-		model.onPlayerMoved.add(() -> {
-			playerSpriteBatch.x = model.playerPos.x + 0.5;
-			playerSpriteBatch.y = model.playerPos.y + 0.5;
-		});
-
-		model.onPlayerMergedWithSlime.add(slimeGroupId -> {
-			for (s in model.slimeGroups[slimeGroupId]) {
-				view.removeBatchElements(s);
+		model.onPlayerMoved.add(slimeGroupIds -> {
+			var ease = Expo.easeOut;
+			if (slimeGroupIds.length > 0) {
+				ease = Elastic.easeOut;
+				Actuate.timer(0.05).onComplete(() -> {
+					for (id in slimeGroupIds) {
+						for (s in model.slimeGroups[id]) {
+							view.removeBatchElements(s);
+						}
+					}
+					rebuildPlayerSprites();
+				});
 			}
-
-			rebuildPlayerSprites();
+			Utils.tween(playerSpriteBatch, 0.3, {
+				x: model.playerPos.x + 0.5,
+				y: model.playerPos.y + 0.5
+			}).ease(ease);
 		});
 
 		model.onRemoveDoor.add(pos -> {
@@ -255,7 +267,6 @@ class PlayView extends GameState {
 			}
 			neighbourDirs.sort((s1, s2) -> s1.compare(s2));
 			final tileName = neighbourDirs.join("");
-			trace('tileName: $tileName');
 
 			final els = [];
 			for (tile in playerSlimeTiles.get(tileName).tiles) {

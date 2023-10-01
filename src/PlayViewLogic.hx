@@ -41,8 +41,7 @@ class Model {
 	public final switches:Array<IPoint> = [];
 
 	// Events
-	public final onPlayerMoved = new Signal();
-	public final onPlayerMergedWithSlime = new Signal1<Int>(); // arg: slime group ID
+	public final onPlayerMoved = new Signal1<Array<Int>>(); // slime groups it merged with, if any
 	public final onWin = new Signal();
 	public final onRemoveDoor = new Signal1<IPoint>(); // arg: door position
 
@@ -122,11 +121,12 @@ class Model {
 			playerGrid.set(new Point2d(s.x, s.y), true);
 			grid[newPos.x + s.x][newPos.y + s.y] = Empty;
 		}
-		for (g in slimesGroupsToBeAdded.keys()) {
-			onPlayerMergedWithSlime.dispatch(g);
-		}
 		playerPos = newPos;
-		onPlayerMoved.dispatch();
+		final slimeGroups = [];
+		for (s in slimesGroupsToBeAdded.keys()) {
+			slimeGroups.push(s);
+		}
+		onPlayerMoved.dispatch(slimeGroups);
 		checkSwitches();
 	}
 
