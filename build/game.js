@@ -5289,21 +5289,21 @@ PlayView.prototype = $extend(GameState.prototype,{
 			var _this = this.staticTileGroup;
 			_this.content.add(s.x,s.y,_this.curColor.x,_this.curColor.y,_this.curColor.z,_this.curColor.w,this.tiles.h["switch"]);
 		}
-		this.model.onPlayerMoved.add(function() {
-			var _this = _gthis.playerSpriteBatch;
-			var v = _gthis.model.playerPos.x + 0.5;
-			_this.posChanged = true;
-			_this.x = v;
-			var _this = _gthis.playerSpriteBatch;
-			var v = _gthis.model.playerPos.y + 0.5;
-			_this.posChanged = true;
-			_this.y = v;
-		});
-		this.model.onPlayerMergedWithSlime.add(function(slimeGroupId) {
-			var _g = 0;
-			var _g1 = _gthis.model.slimeGroups[slimeGroupId];
-			while(_g < _g1.length) _gthis.view.removeBatchElements(_g1[_g++]);
-			_gthis.rebuildPlayerSprites();
+		this.model.onPlayerMoved.add(function(slimeGroupIds) {
+			var ease = motion_easing_Expo.easeOut;
+			if(slimeGroupIds.length > 0) {
+				ease = motion_easing_Elastic.easeOut;
+				motion_Actuate.timer(0.05).onComplete(function() {
+					var _g = 0;
+					while(_g < slimeGroupIds.length) {
+						var _g1 = 0;
+						var _g2 = _gthis.model.slimeGroups[slimeGroupIds[_g++]];
+						while(_g1 < _g2.length) _gthis.view.removeBatchElements(_g2[_g1++]);
+					}
+					_gthis.rebuildPlayerSprites();
+				});
+			}
+			Utils.tween(_gthis.playerSpriteBatch,0.3,{ x : _gthis.model.playerPos.x + 0.5, y : _gthis.model.playerPos.y + 0.5}).ease(ease);
 		});
 		this.model.onRemoveDoor.add(function(pos) {
 			_gthis.view.removeBatchElements(pos);
@@ -5431,7 +5431,6 @@ PlayView.prototype = $extend(GameState.prototype,{
 				return hx_strings_Strings.compare(s1,s2);
 			});
 			var tileName = neighbourDirs.join("");
-			haxe_Log.trace("tileName: " + tileName,{ fileName : "src/PlayView.hx", lineNumber : 258, className : "PlayView", methodName : "rebuildPlayerSprites"});
 			var els = [];
 			var _g = 0;
 			var _g1 = this.playerSlimeTiles.h[tileName].tiles;
@@ -5560,8 +5559,7 @@ h2d_col_IPoint.prototype = {
 var Model = function() {
 	this.onRemoveDoor = new signals_Signal1();
 	this.onWin = new signals_Signal();
-	this.onPlayerMergedWithSlime = new signals_Signal1();
-	this.onPlayerMoved = new signals_Signal();
+	this.onPlayerMoved = new signals_Signal1();
 	this.switches = [];
 	this.doors = [];
 	this.targetEntities = new haxe_ds_StringMap();
@@ -5722,13 +5720,11 @@ Model.prototype = {
 			_this1.h[key1] = true;
 			this.grid[newPos.x + s.x][newPos.y + s.y] = Cell.Empty;
 		}
-		var g = slimesGroupsToBeAdded.keys();
-		while(g.hasNext()) {
-			var g1 = g.next();
-			this.onPlayerMergedWithSlime.dispatch(g1);
-		}
 		this.playerPos = newPos;
-		this.onPlayerMoved.dispatch();
+		var slimeGroups = [];
+		var s = slimesGroupsToBeAdded.keys();
+		while(s.hasNext()) slimeGroups.push(s.next());
+		this.onPlayerMoved.dispatch(slimeGroups);
 		this.checkSwitches();
 	}
 	,isPointInBoard: function(p) {
@@ -6151,6 +6147,23 @@ Utils.floatToStr = function(n,prec) {
 };
 Utils.toIPoint = function(p) {
 	return new h2d_col_IPoint(p.x,p.y);
+};
+Utils.posUpdated = function(obj) {
+	obj.posChanged = true;
+	obj.x = obj.x;
+};
+Utils.tween = function(obj,time,properties,overwrite,after) {
+	if(overwrite == null) {
+		overwrite = true;
+	}
+	if(after != null) {
+		motion_Actuate.timer(time).onComplete(after);
+	}
+	return motion_Actuate.tween(obj,time,properties,overwrite).onUpdate(function() {
+		Utils.posUpdated(obj);
+	}).onComplete(function() {
+		Utils.posUpdated(obj);
+	});
 };
 var XmlType = {};
 XmlType.toString = function(this1) {
@@ -31624,6 +31637,9 @@ js_Boot.__downcastCheck = function(o,cl) {
 		return true;
 	}
 };
+js_Boot.__implements = function(o,iface) {
+	return js_Boot.__interfLoop(js_Boot.getClass(o),iface);
+};
 js_Boot.__cast = function(o,t) {
 	if(o == null || js_Boot.__instanceof(o,t)) {
 		return o;
@@ -48336,6 +48352,9 @@ var motion_actuators_IGenericActuator = function() { };
 $hxClasses["motion.actuators.IGenericActuator"] = motion_actuators_IGenericActuator;
 motion_actuators_IGenericActuator.__name__ = "motion.actuators.IGenericActuator";
 motion_actuators_IGenericActuator.__isInterface__ = true;
+motion_actuators_IGenericActuator.prototype = {
+	__class__: motion_actuators_IGenericActuator
+};
 var motion_actuators_GenericActuator = function(target,duration,properties) {
 	this._autoVisible = true;
 	this._delay = 0;
@@ -48893,6 +48912,88 @@ motion_easing_Expo.__name__ = "motion.easing.Expo";
 var motion_Actuate = function() { };
 $hxClasses["motion.Actuate"] = motion_Actuate;
 motion_Actuate.__name__ = "motion.Actuate";
+motion_Actuate.apply = function(target,properties,customActuator) {
+	motion_Actuate.stop(target,properties);
+	if(customActuator == null) {
+		customActuator = motion_Actuate.defaultActuator;
+	}
+	var actuator = Type.createInstance(customActuator,[target,0,properties]);
+	actuator.apply();
+	return actuator;
+};
+motion_Actuate.getLibrary = function(target,allowCreation) {
+	if(allowCreation == null) {
+		allowCreation = true;
+	}
+	if(motion_Actuate.targetLibraries.h.__keys__[target.__id__] == null && allowCreation) {
+		motion_Actuate.targetLibraries.set(target,[]);
+	}
+	return motion_Actuate.targetLibraries.h[target.__id__];
+};
+motion_Actuate.stop = function(target,properties,complete,sendEvent) {
+	if(sendEvent == null) {
+		sendEvent = true;
+	}
+	if(complete == null) {
+		complete = false;
+	}
+	if(target != null) {
+		if(js_Boot.__implements(target,motion_actuators_IGenericActuator)) {
+			target.stop(null,complete,sendEvent);
+		} else {
+			var library = motion_Actuate.getLibrary(target,false);
+			if(library != null) {
+				if(typeof(properties) == "string") {
+					var temp = { };
+					temp[properties] = null;
+					properties = temp;
+				} else if(((properties) instanceof Array)) {
+					var temp = { };
+					var _g = 0;
+					var _g1 = js_Boot.__cast(properties , Array);
+					while(_g < _g1.length) temp[_g1[_g++]] = null;
+					properties = temp;
+				}
+				var i = library.length - 1;
+				while(i >= 0) {
+					library[i].stop(properties,complete,sendEvent);
+					--i;
+				}
+			}
+		}
+	}
+};
+motion_Actuate.timer = function(duration,customActuator) {
+	return motion_Actuate.tween(new motion__$Actuate_TweenTimer(0),duration,new motion__$Actuate_TweenTimer(1),false,customActuator);
+};
+motion_Actuate.tween = function(target,duration,properties,overwrite,customActuator) {
+	if(overwrite == null) {
+		overwrite = true;
+	}
+	if(target != null) {
+		if(duration > 0) {
+			if(customActuator == null) {
+				customActuator = motion_Actuate.defaultActuator;
+			}
+			var actuator = Type.createInstance(customActuator,[target,duration,properties]);
+			var library = motion_Actuate.getLibrary(actuator.target);
+			if(overwrite) {
+				var i = library.length - 1;
+				while(i >= 0) {
+					library[i].stop(actuator.properties,false,false);
+					--i;
+				}
+				library = motion_Actuate.getLibrary(actuator.target);
+			}
+			library.push(actuator);
+			actuator.move();
+			return actuator;
+		} else {
+			return motion_Actuate.apply(target,properties,customActuator);
+		}
+	}
+	return null;
+};
 motion_Actuate.unload = function(actuator) {
 	var target = actuator.target;
 	if(motion_Actuate.targetLibraries.h.__keys__[target.__id__] != null) {
@@ -48901,6 +49002,14 @@ motion_Actuate.unload = function(actuator) {
 			motion_Actuate.targetLibraries.remove(target);
 		}
 	}
+};
+var motion__$Actuate_TweenTimer = function(progress) {
+	this.progress = progress;
+};
+$hxClasses["motion._Actuate.TweenTimer"] = motion__$Actuate_TweenTimer;
+motion__$Actuate_TweenTimer.__name__ = "motion._Actuate.TweenTimer";
+motion__$Actuate_TweenTimer.prototype = {
+	__class__: motion__$Actuate_TweenTimer
 };
 var motion_IComponentPath = function() { };
 $hxClasses["motion.IComponentPath"] = motion_IComponentPath;
@@ -49166,6 +49275,35 @@ motion_actuators_PropertyPathDetails.__super__ = motion_actuators_PropertyDetail
 motion_actuators_PropertyPathDetails.prototype = $extend(motion_actuators_PropertyDetails.prototype,{
 	__class__: motion_actuators_PropertyPathDetails
 });
+var motion_easing__$Elastic_ElasticEaseOut = function(a,p) {
+	this.a = a;
+	this.p = p;
+};
+$hxClasses["motion.easing._Elastic.ElasticEaseOut"] = motion_easing__$Elastic_ElasticEaseOut;
+motion_easing__$Elastic_ElasticEaseOut.__name__ = "motion.easing._Elastic.ElasticEaseOut";
+motion_easing__$Elastic_ElasticEaseOut.__interfaces__ = [motion_easing_IEasing];
+motion_easing__$Elastic_ElasticEaseOut.prototype = {
+	calculate: function(k) {
+		if(k == 0) {
+			return 0;
+		}
+		if(k == 1) {
+			return 1;
+		}
+		var s;
+		if(this.a < 1) {
+			this.a = 1;
+			s = this.p / 4;
+		} else {
+			s = this.p / (2 * Math.PI) * Math.asin(1 / this.a);
+		}
+		return this.a * Math.exp(-6.931471805599453 * k) * Math.sin((k - s) * (2 * Math.PI) / this.p) + 1;
+	}
+	,__class__: motion_easing__$Elastic_ElasticEaseOut
+};
+var motion_easing_Elastic = function() { };
+$hxClasses["motion.easing.Elastic"] = motion_easing_Elastic;
+motion_easing_Elastic.__name__ = "motion.easing.Elastic";
 var signals_BaseSignal = $hx_exports["BaseSignal"] = function(fireOnAdd) {
 	if(fireOnAdd == null) {
 		fireOnAdd = false;
@@ -49776,8 +49914,10 @@ motion_actuators_SimpleActuator.actuators = [];
 motion_actuators_SimpleActuator.actuatorsLength = 0;
 motion_actuators_SimpleActuator.addedEvent = false;
 motion_easing_Expo.easeOut = new motion_easing__$Expo_ExpoEaseOut();
+motion_Actuate.defaultActuator = motion_actuators_SimpleActuator;
 motion_Actuate.defaultEase = motion_easing_Expo.easeOut;
 motion_Actuate.targetLibraries = new haxe_ds_ObjectMap();
+motion_easing_Elastic.easeOut = new motion_easing__$Elastic_ElasticEaseOut(0.1,0.4);
 {
 	App.main();
 	haxe_EntryPoint.run();
