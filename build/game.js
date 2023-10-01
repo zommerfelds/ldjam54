@@ -4918,6 +4918,7 @@ MenuView.prototype = $extend(GameState.prototype,{
 var View = function() {
 	this.timeSinceLastSwap = 0.0;
 	this.togglingBatchElements = [];
+	this.eyes = [];
 	this.batchElements = new haxe_ds__$HashMap_HashMapData();
 };
 $hxClasses["View"] = View;
@@ -4987,6 +4988,12 @@ PlayView.loadTileMap = function() {
 	_g.h["switch"] = value;
 	var value = get(6,4);
 	_g.h["door"] = value;
+	var value = get(0,2);
+	_g.h["eyes0"] = value;
+	var value = get(1,2);
+	_g.h["eyes1"] = value;
+	var value = get(2,2);
+	_g.h["eyes2"] = value;
 	return _g;
 };
 PlayView.__super__ = GameState;
@@ -5352,7 +5359,7 @@ PlayView.prototype = $extend(GameState.prototype,{
 						this.view.addBatchElement(new Point2d(x,y),el);
 						els.push(el);
 					}
-					els[1].visible = false;
+					els[Std.random(2)].visible = false;
 					this.view.togglingBatchElements.push(els);
 				}
 			}
@@ -5386,10 +5393,12 @@ PlayView.prototype = $extend(GameState.prototype,{
 	}
 	,rebuildPlayerSprites: function() {
 		this.playerSpriteBatch.clear();
+		var pts = [];
 		var p = this.model.playerGrid.keys.iterator();
 		while(p.hasNext()) {
 			var p1 = p.next();
 			var pt = new h2d_col_IPoint(p1.x,p1.y);
+			pts.push(pt);
 			var neighbourDirs = [];
 			var h = Model.ADJACENT_DIRECTIONS_MAP.h;
 			var d_keys = Object.keys(h);
@@ -5398,12 +5407,22 @@ PlayView.prototype = $extend(GameState.prototype,{
 			while(d_current < d_length) {
 				var key = d_keys[d_current++];
 				var d_value = h[key];
-				var neighbour = new h2d_col_IPoint(pt.x + d_value.x,pt.y + d_value.y);
-				if(!this.model.isPointInBoard(neighbour)) {
+				var x = pt.x + d_value.x;
+				var y = pt.y + d_value.y;
+				if(y == null) {
+					y = 0;
+				}
+				if(x == null) {
+					x = 0;
+				}
+				var neighbour_x = x;
+				var neighbour_y = y;
+				var p2 = this.model.playerPos;
+				if(!this.model.isPointInBoard(new h2d_col_IPoint(neighbour_x + p2.x,neighbour_y + p2.y))) {
 					continue;
 				}
 				var _this = this.model.playerGrid.values;
-				var key1 = new Point2d(neighbour.x,neighbour.y).hashCode();
+				var key1 = new Point2d(neighbour_x,neighbour_y).hashCode();
 				if(_this.h.hasOwnProperty(key1)) {
 					neighbourDirs.push(key);
 				}
@@ -5412,6 +5431,7 @@ PlayView.prototype = $extend(GameState.prototype,{
 				return hx_strings_Strings.compare(s1,s2);
 			});
 			var tileName = neighbourDirs.join("");
+			haxe_Log.trace("tileName: " + tileName,{ fileName : "src/PlayView.hx", lineNumber : 258, className : "PlayView", methodName : "rebuildPlayerSprites"});
 			var els = [];
 			var _g = 0;
 			var _g1 = this.playerSlimeTiles.h[tileName].tiles;
@@ -5423,9 +5443,26 @@ PlayView.prototype = $extend(GameState.prototype,{
 				this.view.addBatchElement(pt,el);
 				els.push(el);
 			}
-			els[1].visible = false;
+			els[Std.random(2)].visible = false;
 			this.view.togglingBatchElements.push(els);
 		}
+		var eyePt = pts[Std.random(pts.length)];
+		this.view.eyes.splice(0,this.view.eyes.length);
+		var el = this.playerSpriteBatch.add(new h2d_BatchElement(this.tiles.h["eyes0"]));
+		el.x = eyePt.x;
+		el.y = eyePt.y;
+		el.visible = false;
+		this.view.eyes.push(el);
+		var el = this.playerSpriteBatch.add(new h2d_BatchElement(this.tiles.h["eyes1"]));
+		el.x = eyePt.x;
+		el.y = eyePt.y;
+		el.visible = false;
+		this.view.eyes.push(el);
+		var el = this.playerSpriteBatch.add(new h2d_BatchElement(this.tiles.h["eyes2"]));
+		el.x = eyePt.x;
+		el.y = eyePt.y;
+		el.visible = true;
+		this.view.eyes.push(el);
 	}
 	,onEvent: function(event) {
 		var moveDiff = haxe_ds_Option.None;
@@ -5469,6 +5506,25 @@ PlayView.prototype = $extend(GameState.prototype,{
 				++_g;
 				t[0].visible = !t[0].visible;
 				t[1].visible = !t[1].visible;
+			}
+		}
+		if(this.view.eyes[0].visible) {
+			if(Math.random() < 0.01) {
+				this.view.eyes[1].visible = true;
+				this.view.eyes[0].visible = false;
+			}
+		} else if(this.view.eyes[1].visible) {
+			if(Math.random() < 0.2) {
+				this.view.eyes[0].visible = true;
+				this.view.eyes[1].visible = false;
+			} else if(Math.random() < 0.05) {
+				this.view.eyes[2].visible = true;
+				this.view.eyes[1].visible = false;
+			}
+		} else if(this.view.eyes[2].visible) {
+			if(Math.random() < 0.1) {
+				this.view.eyes[1].visible = true;
+				this.view.eyes[2].visible = false;
 			}
 		}
 	}
