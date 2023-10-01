@@ -1,79 +1,47 @@
-import h2d.TileGroup;
-import h2d.Tile;
-import hxd.Res;
-import h2d.SpriteBatch;
-import haxe.ds.IntMap;
-import haxe.ds.StringMap;
-import ldtk.Json.EntityReferenceInfos;
-import h2d.Flow;
-import LdtkProject.Ldtk;
 import Gui.TextButton;
+import LdtkProject.Ldtk;
+import PlayViewLogic.Model;
+import Utils.Point2d;
+import h2d.Flow;
+import h2d.SpriteBatch;
+import h2d.Tile;
+import h2d.TileGroup;
 import h2d.col.IPoint;
+import haxe.ds.HashMap;
 import haxe.ds.Option;
 import hxd.Key;
-import Utils.Point2d;
-import haxe.ds.HashMap;
+import hxd.Res;
 
 using hx.strings.Strings;
 
-enum Cell {
-	Empty;
-	Wall;
-	Door(el:BatchElement);
-	Switch(groupId:Int);
-	Slime(groupId:Int, el:BatchElement);
-	Exit;
+class View {
+	public function new() {}
+
+	public final batchElements = new HashMap<Point2d, BatchElement>();
 }
 
 class PlayView extends GameState {
-	static final BOARD_WIDTH = 12;
-
-	static final BOARD_HEIGHT = 18;
-
 	final gameArea = new h2d.Graphics();
 	final staticTileGroup = new TileGroup();
-	var playerPos = new IPoint();
-	final playerGrid = new HashMap<Point2d, Bool>();
+
 	final tiles = loadTileMap();
-	final doors:Array<{el:BatchElement}> = [];
 	var spriteBatch:SpriteBatch;
 	var playerSpriteBatch:SpriteBatch;
 	final slimeTiles:Map<String, {tile:Tile, r:Int}> = [];
 	final playerSlimeTiles:Map<String, {tile:Tile, r:Int}> = [];
 
-	final grid:Array<Array<Cell>> = [
-		for (x in 0...BOARD_WIDTH) [
-			for (y in 0...BOARD_HEIGHT)
-				Empty
-		]
-	];
-
-	final slimeGroups:Array<Array<IPoint>> = [];
-	final switchGroups = new IntMap<{numSwitches:Int, targets:Array<EntityReferenceInfos>}>();
-
 	final ldtkLevel:Null<LdtkProject.LdtkProject_Level>;
 	final levelIndex:Int;
 
-	final targetEntities = new StringMap<IPoint>();
-
 	var timeSinceLastUpdate = 0.0;
 
-	static final ADJACENT_DIRECTIONS = [new IPoint(0, 1), new IPoint(0, -1), new IPoint(1, 0), new IPoint(-1, 0)];
-	static final ADJACENT_DIRECTIONS_MAP = [
-		"D" => new IPoint(0, 1),
-		"U" => new IPoint(0, -1),
-		"R" => new IPoint(1, 0),
-		"L" => new IPoint(-1, 0)
-	];
+	final model = new Model();
+	final view = new View();
 
 	public function new(level:Int) {
 		super();
 		levelIndex = level;
 		ldtkLevel = Ldtk.world.levels[level];
-	}
-
-	static function isFree(cell:Cell) {
-		return cell.match(Empty | Exit | Switch(_));
 	}
 
 	static function loadTileMap() {
@@ -89,14 +57,14 @@ class PlayView extends GameState {
 	}
 
 	override function init() {
-		if (height / width > BOARD_HEIGHT / BOARD_WIDTH) {
+		if (height / width > Model.BOARD_HEIGHT / Model.BOARD_WIDTH) {
 			// Width is limiting factor
-			gameArea.scale(width / BOARD_WIDTH);
-			gameArea.y = (height - BOARD_HEIGHT * gameArea.scaleY) / 2;
+			gameArea.scale(width / Model.BOARD_WIDTH);
+			gameArea.y = (height - Model.BOARD_HEIGHT * gameArea.scaleY) / 2;
 		} else {
 			// Height is limiting factor
-			gameArea.scale(height / BOARD_HEIGHT);
-			gameArea.x = (width - BOARD_WIDTH * gameArea.scaleX) / 2;
+			gameArea.scale(height / Model.BOARD_HEIGHT);
+			gameArea.x = (width - Model.BOARD_WIDTH * gameArea.scaleX) / 2;
 		}
 		addChild(gameArea);
 
@@ -135,19 +103,52 @@ class PlayView extends GameState {
 		playerSpriteBatch.x = 0.5;
 		playerSpriteBatch.y = 0.5;
 
-		setupGame();
+		model.loadLevel(ldtkLevel);
 
-		for (x in 0...BOARD_WIDTH) {
-			for (y in 0...BOARD_HEIGHT) {
+		for (d in model.doors) {
+			final el = spriteBatch.add(new BatchElement(tiles["door"]));
+			el.x = d.x;
+			el.y = d.y;
+			view.batchElements.set(new Point2d(d.x, d.y), el);
+		}
+		for (s in model.switches) {
+			staticTileGroup.add(s.x, s.y, tiles["switch"]);
+		}
+
+		model.onPlayerMoved.add(() -> {
+			playerSpriteBatch.x = model.playerPos.x + 0.5;
+			playerSpriteBatch.y = model.playerPos.y + 0.5;
+		});
+
+		model.onPlayerMergedWithSlime.add(slimeGroupId -> {
+			for (s in model.slimeGroups[slimeGroupId]) {
+				final p = new Point2d(s.x, s.y);
+				view.batchElements.get(p).remove();
+				view.batchElements.remove(p);
+			}
+
+			rebuildPlayerSprites();
+		});
+
+		model.onRemoveDoor.add(pos -> {
+			final pt2d = new Point2d(pos.x, pos.y);
+			view.batchElements.get(pt2d).remove();
+			view.batchElements.remove(pt2d);
+		});
+
+		model.onWin.add(win);
+
+		for (x in 0...Model.BOARD_WIDTH) {
+			for (y in 0...Model.BOARD_HEIGHT) {
 				final pt = new IPoint(x, y);
-				switch (grid[x][y]) {
-					case Slime(groupId, null):
+				switch (model.grid[x][y]) {
+					case Slime(groupId):
 						final neighbourDirs = [];
-						for (d in ADJACENT_DIRECTIONS_MAP.keyValueIterator()) {
+						for (d in Model.ADJACENT_DIRECTIONS_MAP.keyValueIterator()) {
 							final neighbour = pt.add(d.value);
-							if (!isPointInBoard(neighbour))
+							if (!model.isPointInBoard(neighbour))
 								continue;
-							if (grid[neighbour.x][neighbour.y].match(Slime(_))) {
+							if (model.grid[neighbour.x][neighbour.y].match(Slime(_))) {
 								neighbourDirs.push(d.key);
 							}
 						}
@@ -157,7 +158,7 @@ class PlayView extends GameState {
 						el.rotation = slimeTiles.get(tileName).r * Math.PI * 0.5;
 						el.x = x;
 						el.y = y;
-						grid[x][y] = Slime(groupId, el);
+						view.batchElements.set(new Point2d(x, y), el);
 					case _:
 				}
 			}
@@ -192,80 +193,6 @@ class PlayView extends GameState {
 		App.instance.switchState(new PlayView(levelIndex + 1));
 	}
 
-	function setupGame() {
-		for (y in 0...ldtkLevel.l_IntGrid.cHei) {
-			for (x in 0...ldtkLevel.l_IntGrid.cWid) {
-				switch (ldtkLevel.l_IntGrid.getName(x, y)) {
-					case "Wall":
-						grid[x][y] = Wall;
-					case "Slime":
-						grid[x][y] = Slime(-1, null);
-					case "Exit":
-						grid[x][y] = Exit;
-					case "Player":
-						playerGrid.set(new Point2d(x, y), true);
-					case null:
-					// empty field
-					case x:
-						throw 'invalid case $x';
-				}
-			}
-		}
-
-		for (entity in ldtkLevel.l_Entities.getAllUntyped()) {
-			final pos = new IPoint(entity.cx, entity.cy);
-			switch (entity.entityType) {
-				case Switch:
-					final switchEntity:LdtkProject.Entity_Switch = cast entity;
-					final groupId = switchEntity.f_Group ?? -switchEntity.iid.hashCode();
-					grid[entity.cx][entity.cy] = Switch(groupId);
-					if (switchGroups.get(groupId) == null) {
-						switchGroups.set(groupId, {numSwitches: 0, targets: []});
-					}
-					switchGroups.get(groupId).numSwitches++;
-					switchGroups.get(groupId).targets = switchGroups.get(groupId).targets.concat(switchEntity.f_Targets);
-
-					staticTileGroup.add(entity.cx, entity.cy, tiles["switch"]);
-				case Door:
-					final el = spriteBatch.add(new BatchElement(tiles["door"]));
-					el.x = entity.cx;
-					el.y = entity.cy;
-					doors.push({el: el});
-
-					grid[entity.cx][entity.cy] = Door(el);
-					targetEntities.set(entity.iid, pos);
-			}
-		}
-
-		makeSlimeGroups();
-	}
-
-	function makeSlimeGroups() {
-		function floodFill(x, y, groupId) {
-			if (!grid[x][y].match(Slime(-1, null)))
-				return;
-			grid[x][y] = Slime(groupId, null);
-			slimeGroups[groupId].push(new IPoint(x, y));
-			for (d in ADJACENT_DIRECTIONS) {
-				if (!isPointInBoard(d))
-					continue;
-				floodFill(x + d.x, y + d.y, groupId);
-			}
-		}
-
-		for (x in 0...BOARD_WIDTH) {
-			for (y in 0...BOARD_HEIGHT) {
-				switch (grid[x][y]) {
-					case Slime(-1, _):
-						slimeGroups.push([]);
-						floodFill(x, y, slimeGroups.length - 1);
-					case Slime(_):
-					case _:
-				}
-			}
-		}
-	}
-
 	function onEvent(event:hxd.Event) {
 		var moveDiff:Option<IPoint> = None;
 		switch (event.kind) {
@@ -287,66 +214,22 @@ class PlayView extends GameState {
 		}
 		switch (moveDiff) {
 			case Some(diff):
-				movePlayer(diff);
+				model.movePlayer(diff);
 			case _:
 		}
-	}
-
-	function isPointInBoard(p) {
-		return p.x >= 0 && p.x < BOARD_WIDTH && p.y >= 0 && p.y < BOARD_HEIGHT;
-	}
-
-	function movePlayer(diff:IPoint) {
-		final newPos = playerPos.add(diff);
-		final slimesToBeAdded = [];
-		for (p in playerGrid.keys()) {
-			if (!isPointInBoard(newPos.add(Utils.toIPoint(p))) || !isFree(grid[newPos.x + p.x][newPos.y + p.y])) {
-				return;
-			}
-			if (isPointInBoard(newPos.add(Utils.toIPoint(p)).add(diff))) {
-				switch (grid[newPos.x + p.x + diff.x][newPos.y + p.y + diff.y]) {
-					case Slime(groupId, _):
-						for (s in slimeGroups[groupId]) {
-							switch (grid[s.x][s.y]) {
-								case Slime(_, el):
-									slimesToBeAdded.push({pos: new IPoint(s.x - newPos.x, s.y - newPos.y), el: el});
-								case _: throw "invalid slimeGroups state";
-							}
-						}
-					case _:
-				}
-			}
-			switch (grid[newPos.x + p.x][newPos.y + p.y]) {
-				case Exit:
-					win();
-				case _:
-			}
-		}
-		for (s in slimesToBeAdded) {
-			playerGrid.set(new Point2d(s.pos.x, s.pos.y), true);
-			grid[newPos.x + s.pos.x][newPos.y + s.pos.y] = Empty;
-			s.el.remove();
-		}
-		if (slimesToBeAdded.length > 0) {
-			rebuildPlayerSprites();
-		}
-		playerPos = newPos;
-		playerSpriteBatch.x = playerPos.x + 0.5;
-		playerSpriteBatch.y = playerPos.y + 0.5;
-		checkSwitches();
 	}
 
 	function rebuildPlayerSprites() {
 		playerSpriteBatch.clear();
 
-		for (p in playerGrid.keys()) {
+		for (p in model.playerGrid.keys()) {
 			final pt = new IPoint(p.x, p.y);
 			final neighbourDirs = [];
-			for (d in ADJACENT_DIRECTIONS_MAP.keyValueIterator()) {
+			for (d in Model.ADJACENT_DIRECTIONS_MAP.keyValueIterator()) {
 				final neighbour = pt.add(d.value);
-				if (!isPointInBoard(neighbour))
+				if (!model.isPointInBoard(neighbour))
 					continue;
-				if (playerGrid.exists(new Point2d(neighbour.x, neighbour.y))) {
+				if (model.playerGrid.exists(new Point2d(neighbour.x, neighbour.y))) {
 					neighbourDirs.push(d.key);
 				}
 			}
@@ -356,38 +239,6 @@ class PlayView extends GameState {
 			el.rotation = playerSlimeTiles.get(tileName).r * Math.PI * 0.5;
 			el.x = pt.x;
 			el.y = pt.y;
-		}
-	}
-
-	function checkSwitches() {
-		final touchedGroups = new IntMap<Int>();
-		for (p in playerGrid.keys()) {
-			switch (grid[playerPos.x + p.x][playerPos.y + p.y]) {
-				case Switch(groupId):
-					if (touchedGroups.get(groupId) == null) {
-						touchedGroups.set(groupId, 0);
-					}
-					touchedGroups.set(groupId, touchedGroups.get(groupId) + 1);
-				case _:
-			}
-		}
-		for (t in touchedGroups.keyValueIterator()) {
-			if (switchGroups.get(t.key).numSwitches == t.value) {
-				activateSwitch(t.key);
-			}
-		}
-	}
-
-	function activateSwitch(groupId) {
-		for (t in switchGroups.get(groupId).targets) {
-			final pt = targetEntities.get(t.entityIid);
-			switch (grid[pt.x][pt.y]) {
-				case Door(el):
-					grid[pt.x][pt.y] = Empty;
-					el.remove();
-				case x:
-					trace('WARNING: invalid target type $x');
-			}
 		}
 	}
 
