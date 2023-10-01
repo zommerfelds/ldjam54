@@ -1,3 +1,5 @@
+import motion.easing.Sine;
+import motion.Actuate;
 import LdtkProject.Ldtk;
 
 class MenuView extends GameState {
@@ -20,7 +22,7 @@ class MenuView extends GameState {
 		new Gui.TextButton(centeringFlow, "Toggle fullscreen", () -> {
 			HerbalTeaApp.toggleFullScreen();
 			centeringFlow.reflow();
-		}, Gui.Colors.BLUE, 0.8);
+		}, Gui.Colors.GREEN, 0.5);
 
 		final levels = new h2d.Flow(centeringFlow);
 		levels.overflow = Limit;
@@ -29,10 +31,21 @@ class MenuView extends GameState {
 		levels.horizontalAlign = Middle;
 		levels.horizontalSpacing = Gui.scaleAsInt(10);
 		levels.verticalSpacing = Gui.scaleAsInt(10);
+		final unlockedLevel = App.loadUnlockedLevel();
+		/*new Gui.TextButton(levels, "Intro", () -> {
+			App.instance.switchState(new PlayView(0));
+		}, Gui.Colors.BLUE, 0.8);*/
 		for (i in 0...Ldtk.proj.all_worlds.Default.levels.length) {
-			new Gui.TextButton(levels, "L" + i, () -> {
+			if (i > unlockedLevel)
+				break;
+			new Gui.TextButton(levels, "Exp. " + (i + 1), () -> {
 				App.instance.switchState(new PlayView(i));
 			}, Gui.Colors.BLUE, 0.8);
+		}
+
+		if (unlockedLevel >= Ldtk.proj.all_worlds.Default.levels.length) {
+			final winText = new Gui.Text("You beat the game!", centeringFlow);
+			Utils.tween(winText, 0.5, {alpha: 0.5}).ease(Sine.easeInOut).reflect().repeat();
 		}
 
 		// new Gui.Text("Highscore: " + App.loadHighScore(), centeringFlow, 0.8);

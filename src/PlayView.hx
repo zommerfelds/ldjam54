@@ -163,8 +163,10 @@ class PlayView extends GameState {
 		}
 
 		model.onPlayerMoved.add(slimeGroupIds -> {
+			var time = 0.2;
 			var ease = Expo.easeOut;
 			if (slimeGroupIds.length > 0) {
+				time = 0.3;
 				ease = Elastic.easeOut;
 				Actuate.timer(0.05).onComplete(() -> {
 					for (id in slimeGroupIds) {
@@ -175,7 +177,7 @@ class PlayView extends GameState {
 					rebuildPlayerSprites();
 				});
 			}
-			Utils.tween(playerSpriteBatch, 0.3, {
+			Utils.tween(playerSpriteBatch, time, {
 				x: model.playerPos.x + 0.5,
 				y: model.playerPos.y + 0.5
 			}).ease(ease);
@@ -245,7 +247,12 @@ class PlayView extends GameState {
 	}
 
 	function win() {
-		App.instance.switchState(new PlayView(levelIndex + 1));
+		App.writeUnlockedLevel(levelIndex + 1);
+		if (levelIndex + 1 < Ldtk.world.levels.length) {
+			App.instance.switchState(new PlayView(levelIndex + 1));
+		} else {
+			App.instance.switchState(new MenuView());
+		}
 	}
 
 	function rebuildPlayerSprites() {
