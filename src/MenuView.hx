@@ -32,9 +32,9 @@ class MenuView extends GameState {
 		levels.horizontalSpacing = Gui.scaleAsInt(10);
 		levels.verticalSpacing = Gui.scaleAsInt(10);
 		final unlockedLevel = App.loadUnlockedLevel();
-		/*new Gui.TextButton(levels, "Intro", () -> {
-			App.instance.switchState(new PlayView(0));
-		}, Gui.Colors.BLUE, 0.8);*/
+		new Gui.TextButton(levels, "Intro", () -> {
+			App.instance.switchState(new IntroView());
+		}, Gui.Colors.BLUE, 0.8);
 		for (i in 0...Ldtk.proj.all_worlds.Default.levels.length) {
 			if (i > unlockedLevel)
 				break;
@@ -47,8 +47,6 @@ class MenuView extends GameState {
 			final winText = new Gui.Text("You beat the game!", centeringFlow);
 			Utils.tween(winText, 0.5, {alpha: 0.5}).ease(Sine.easeInOut).reflect().repeat();
 		}
-
-		// new Gui.Text("Highscore: " + App.loadHighScore(), centeringFlow, 0.8);
 
 		centeringFlow.addSpacing(Gui.scaleAsInt(100));
 

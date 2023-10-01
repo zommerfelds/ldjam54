@@ -114,6 +114,7 @@ class Model {
 			switch (grid[newPos.x + p.x][newPos.y + p.y]) {
 				case Exit:
 					onWin.dispatch();
+					onWin.mute = true;
 				case _:
 			}
 		}

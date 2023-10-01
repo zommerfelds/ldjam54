@@ -20,7 +20,7 @@ class App extends HerbalTeaApp {
 
 	// TODO: move this to HerbalTeaApp
 	public static function loadUnlockedLevel():Int {
-		return hxd.Save.load({unlockedLevel: 0}).unlockedLevel;
+		return hxd.Save.load({unlockedLevel: -1}).unlockedLevel;
 	}
 
 	public static function writeUnlockedLevel(unlockedLevel:Int) {

@@ -1,3 +1,4 @@
+import h2d.Graphics;
 import motion.easing.Expo;
 import motion.easing.Quad;
 import motion.easing.Elastic;
@@ -188,6 +189,7 @@ class PlayView extends GameState {
 		});
 
 		model.onWin.add(() -> {
+			overlayTransition(0.5, true, true);
 			Actuate.timer(0.5).onComplete(win);
 		});
 
@@ -238,10 +240,22 @@ class PlayView extends GameState {
 			reset();
 		}, Gui.Colors.RED, false, 0.4);
 
+		overlayTransition(1.0, false, false);
+
 		final manager = hxd.snd.Manager.get();
 		manager.masterVolume = 0.5;
 		manager.masterChannelGroup.addEffect(new hxd.snd.effect.Reverb(hxd.snd.effect.ReverbPreset.DRUGGED));
 		manager.masterChannelGroup.addEffect(new hxd.snd.effect.Pitch(0.5));
+	}
+
+	function overlayTransition(time:Float, fadeOut:Bool, blockInteractions:Bool) {
+		final overlay = new Flow(this);
+		overlay.minWidth = width;
+		overlay.minHeight = height;
+		overlay.backgroundTile = Tile.fromColor(0x000000);
+		overlay.enableInteractive = blockInteractions;
+		overlay.alpha = fadeOut ? 0.0 : 1.0;
+		Utils.tween(overlay, time, {alpha: fadeOut ? 1.0 : 0.0}).onComplete(overlay.remove);
 	}
 
 	function reset() {
