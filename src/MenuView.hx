@@ -1,9 +1,13 @@
+import hxd.snd.Channel;
+import hxd.Res;
 import hxd.Key;
 import motion.easing.Sine;
 import motion.Actuate;
 import LdtkProject.Ldtk;
 
 class MenuView extends GameState {
+	var loopSound:Null<Channel>;
+
 	override function init() {
 		final centeringFlow = new h2d.Flow(this);
 		centeringFlow.backgroundTile = h2d.Tile.fromColor(0x082036);
@@ -35,6 +39,7 @@ class MenuView extends GameState {
 		final unlockedLevel = App.loadUnlockedLevel();
 
 		var enter = () -> {
+			Res.sounds.ui.play();
 			App.instance.switchState(new IntroView());
 		};
 
@@ -43,6 +48,7 @@ class MenuView extends GameState {
 			if (i > unlockedLevel)
 				break;
 			enter = () -> {
+				Res.sounds.start.play();
 				App.instance.switchState(new PlayView(i));
 			};
 			new Gui.TextButton(levels, "Exp. " + (i + 1), enter, Gui.Colors.BLUE, 0.8);
@@ -51,6 +57,8 @@ class MenuView extends GameState {
 		if (unlockedLevel >= Ldtk.proj.all_worlds.Default.levels.length) {
 			final winText = new Gui.Text("You beat the game!", centeringFlow);
 			Utils.tween(winText, 0.5, {alpha: 0.5}).ease(Sine.easeInOut).reflect().repeat();
+
+			loopSound = Res.sounds.scary.play(true);
 		} else {
 			new Gui.Text("[ENTER] for next level", centeringFlow, 0.5);
 		}
@@ -64,5 +72,11 @@ class MenuView extends GameState {
 		centeringFlow.addSpacing(Gui.scaleAsInt(100));
 
 		new Gui.Text("version: " + hxd.Res.version.entry.getText(), centeringFlow, 0.5);
+	}
+
+	override function cleanup() {
+		if (loopSound != null) {
+			loopSound.fadeTo(0.0, loopSound.stop);
+		}
 	}
 }

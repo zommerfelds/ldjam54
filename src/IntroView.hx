@@ -1,9 +1,15 @@
+import hxd.snd.Channel;
+import hxd.snd.effect.Pitch;
+import motion.Actuate;
+import hxd.Res;
 import motion.easing.Cubic;
 import hxd.Key;
 import Gui.TextButton;
 import h2d.Flow;
 
 class IntroView extends GameState {
+	var loopSound:Null<Channel>;
+
 	override function init() {
 		final centeringFlow = new Flow(this);
 		centeringFlow.backgroundTile = h2d.Tile.fromColor(0x082036);
@@ -15,19 +21,33 @@ class IntroView extends GameState {
 		centeringFlow.layout = Vertical;
 		centeringFlow.verticalSpacing = Gui.scaleAsInt(50);
 
+		loopSound = Res.sounds.scary.play(true);
+
 		final text = new Gui.Text("The Evil Monster Research Corporation captured our slime friends.", centeringFlow, 0.8);
 		text.textAlign = MultilineCenter;
 		text.alpha = 0.0;
-		Utils.tween(text, 2.0, {alpha: 1.0}).ease(Cubic.easeInOut);
+		Actuate.timer(0.7).onComplete(() -> {
+			final s = Res.sounds.research.play();
+			s.addEffect(new Pitch(1.0));
+		});
+		Utils.tween(text, 0.5, {alpha: 1.0}).delay(0.5).ease(Cubic.easeInOut);
 		final text = new Gui.Text("They are conducting intelligence tests on our species.", centeringFlow, 0.8);
 		text.textAlign = MultilineCenter;
 		text.alpha = 0.0;
-		Utils.tween(text, 2.0, {alpha: 1.0}).delay(3.0).ease(Cubic.easeInOut);
+		Actuate.timer(3.2).onComplete(() -> {
+			final s = Res.sounds.research.play();
+			s.addEffect(new Pitch(1.2));
+		});
+		Utils.tween(text, 0.5, {alpha: 1.0}).delay(3.0).ease(Cubic.easeInOut);
 		final text = new Gui.Text("How evil!", centeringFlow, 0.8);
 		text.textAlign = MultilineCenter;
 		text.alpha = 0.0;
 		var enableEnter = false;
-		Utils.tween(text, 2.0, {alpha: 1.0})
+		Actuate.timer(6.2).onComplete(() -> {
+			final s = Res.sounds.research.play();
+			s.addEffect(new Pitch(1.5));
+		});
+		Utils.tween(text, 0.5, {alpha: 1.0})
 			.delay(6.0)
 			.ease(Cubic.easeInOut)
 			.onComplete(() -> {
@@ -56,7 +76,14 @@ class IntroView extends GameState {
 	}
 
 	function done() {
+		Res.sounds.done.play();
 		App.writeUnlockedLevel(0);
 		App.instance.switchState(new MenuView());
+	}
+
+	override function cleanup() {
+		if (loopSound != null) {
+			loopSound.fadeTo(0.0, loopSound.stop);
+		}
 	}
 }

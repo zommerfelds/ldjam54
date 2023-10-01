@@ -1,3 +1,5 @@
+import motion.Actuate;
+import hxd.Res;
 import motion.easing.Cubic;
 import LdtkProject.Ldtk;
 import hxd.Key;
@@ -36,16 +38,19 @@ class StoryView extends GameState {
 		final text = new Gui.Text(storyText, centeringFlow, 0.5);
 		text.textAlign = MultilineCenter;
 		text.alpha = 0.0;
-		Utils.tween(text, 2.0, {alpha: 1.0})
+		Utils.tween(text, 0.5, {alpha: 1.0})
 			.delay(1.5)
 			.ease(Cubic.easeInOut)
 			.onComplete(() -> {
 				enableEnter = true;
 			});
+		Actuate.timer(1.7).onComplete(() -> {
+			final s = Res.sounds.research.play();
+		});
 
 		centeringFlow.addSpacing(Gui.scaleAsInt(100));
 
-		final text = levelIndex < Ldtk.world.levels.length ? "Continue experimentation" : "You reached the end!";
+		final text = levelIndex + 1 < Ldtk.world.levels.length ? "Continue experimentation" : "You reached the end!";
 		final button = new Gui.TextButton(centeringFlow, text + " [ENTER]", () -> {
 			done();
 		}, Gui.Colors.GREEN, 0.5);
@@ -68,6 +73,9 @@ class StoryView extends GameState {
 	}
 
 	function done() {
+		if (levelIndex + 1 < Ldtk.world.levels.length) {
+			Res.sounds.done.play();
+		}
 		App.instance.switchState(new MenuView());
 	}
 }

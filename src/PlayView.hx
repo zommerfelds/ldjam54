@@ -177,6 +177,10 @@ class PlayView extends GameState {
 					}
 					rebuildPlayerSprites();
 				});
+
+				Res.sounds.merge.play();
+			} else {
+				Res.sounds.move.play();
 			}
 			Utils.tween(playerSpriteBatch, time, {
 				x: model.playerPos.x + 0.5,
@@ -185,10 +189,12 @@ class PlayView extends GameState {
 		});
 
 		model.onRemoveDoor.add(pos -> {
+			Res.sounds.unlock.play();
 			view.removeBatchElements(pos);
 		});
 
 		model.onWin.add(() -> {
+			Res.sounds.success.play();
 			overlayTransition(0.5, true, true);
 			Actuate.timer(0.5).onComplete(win);
 		});
@@ -238,10 +244,10 @@ class PlayView extends GameState {
 
 		overlayTransition(1.0, false, false);
 
-		final manager = hxd.snd.Manager.get();
-		manager.masterVolume = 0.5;
-		manager.masterChannelGroup.addEffect(new hxd.snd.effect.Reverb(hxd.snd.effect.ReverbPreset.DRUGGED));
-		manager.masterChannelGroup.addEffect(new hxd.snd.effect.Pitch(0.5));
+		/*final manager = hxd.snd.Manager.get();
+			manager.masterVolume = 0.5;
+			manager.masterChannelGroup.addEffect(new hxd.snd.effect.Reverb(hxd.snd.effect.ReverbPreset.DRUGGED));
+			manager.masterChannelGroup.addEffect(new hxd.snd.effect.Pitch(0.5)); */
 	}
 
 	function overlayTransition(time:Float, fadeOut:Bool, blockInteractions:Bool) {
@@ -255,10 +261,12 @@ class PlayView extends GameState {
 	}
 
 	function reset() {
+		Res.sounds.reset.play();
 		App.instance.switchState(new PlayView(levelIndex));
 	}
 
 	function back() {
+		Res.sounds.ui.play();
 		App.instance.switchState(new MenuView());
 	}
 
