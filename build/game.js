@@ -396,7 +396,7 @@ App.main = function() {
 	App.instance = new App();
 };
 App.loadUnlockedLevel = function() {
-	return hxd_Save.load({ unlockedLevel : 0}).unlockedLevel;
+	return hxd_Save.load({ unlockedLevel : -1}).unlockedLevel;
 };
 App.writeUnlockedLevel = function(unlockedLevel) {
 	hxd_Save.save({ unlockedLevel : unlockedLevel});
@@ -885,6 +885,11 @@ h2d_Object.prototype = {
 	}
 	,removeChildren: function() {
 		while(this.children.length > 0) this.removeChild(this.getChildAt(0));
+	}
+	,remove: function() {
+		if(this.parent != null) {
+			this.parent.removeChild(this);
+		}
 	}
 	,draw: function(ctx) {
 	}
@@ -3910,6 +3915,56 @@ HxOverrides.remove = function(a,obj) {
 HxOverrides.now = function() {
 	return Date.now();
 };
+var IntroView = function() {
+	GameState.call(this);
+};
+$hxClasses["IntroView"] = IntroView;
+IntroView.__name__ = "IntroView";
+IntroView.__super__ = GameState;
+IntroView.prototype = $extend(GameState.prototype,{
+	init: function() {
+		var centeringFlow = new h2d_Flow(this);
+		centeringFlow.set_backgroundTile(h2d_Tile.fromColor(532534));
+		centeringFlow.set_fillWidth(true);
+		centeringFlow.set_fillHeight(true);
+		centeringFlow.set_horizontalAlign(h2d_FlowAlign.Middle);
+		centeringFlow.set_verticalAlign(h2d_FlowAlign.Middle);
+		centeringFlow.set_maxWidth(this.width * 0.8 | 0);
+		centeringFlow.set_layout(h2d_FlowLayout.Vertical);
+		centeringFlow.set_verticalSpacing(Gui.scaleAsInt(50));
+		var text = new Text("The Evil Monster Research Corporation captured our slime friends.",centeringFlow,0.8);
+		text.set_textAlign(h2d_Align.MultilineCenter);
+		text.alpha = 0.0;
+		Utils.tween(text,2.0,{ alpha : 1.0}).delay(0.5);
+		var text = new Text("They are conducting intelligence tests on our species.",centeringFlow,0.8);
+		text.set_textAlign(h2d_Align.MultilineCenter);
+		text.alpha = 0.0;
+		Utils.tween(text,2.0,{ alpha : 1.0}).delay(3.0);
+		var text = new Text("How evil!",centeringFlow,0.8);
+		text.set_textAlign(h2d_Align.MultilineCenter);
+		text.alpha = 0.0;
+		Utils.tween(text,2.0,{ alpha : 1.0}).delay(6.0);
+		centeringFlow.addSpacing(Gui.scaleAsInt(100));
+		var button = new TextButton(centeringFlow,"See the experiments",function() {
+			App.writeUnlockedLevel(0);
+			App.instance.switchState(new MenuView());
+		},Colors.GREEN,null,0.5);
+		button.alpha = 0.0;
+		Utils.tween(button,2.0,{ alpha : 1.0}).delay(9.0);
+		var flow = new h2d_Flow(this);
+		var v = Gui.scale(10);
+		flow.posChanged = true;
+		flow.x = v;
+		var v = Gui.scale(10);
+		flow.posChanged = true;
+		flow.y = v;
+		flow.set_layout(h2d_FlowLayout.Vertical);
+		new TextButton(flow,"Back",function() {
+			App.instance.switchState(new MenuView());
+		},Colors.GREY,false,0.4);
+	}
+	,__class__: IntroView
+});
 var Lambda = function() { };
 $hxClasses["Lambda"] = Lambda;
 Lambda.__name__ = "Lambda";
@@ -4929,6 +4984,9 @@ MenuView.prototype = $extend(GameState.prototype,{
 		levels.set_horizontalSpacing(Gui.scaleAsInt(10));
 		levels.set_verticalSpacing(Gui.scaleAsInt(10));
 		var unlockedLevel = App.loadUnlockedLevel();
+		new TextButton(levels,"Intro",function() {
+			App.instance.switchState(new IntroView());
+		},Colors.BLUE,null,0.8);
 		var _g = 0;
 		var _g1 = Ldtk.proj.all_worlds.Default.levels.length;
 		while(_g < _g1) {
@@ -5346,6 +5404,7 @@ PlayView.prototype = $extend(GameState.prototype,{
 			_gthis.view.removeBatchElements(pos);
 		});
 		this.model.onWin.add(function() {
+			_gthis.overlayTransition(0.5,true,true);
 			motion_Actuate.timer(0.5).onComplete($bind(_gthis,_gthis.win));
 		});
 		var _g = 0;
@@ -5419,10 +5478,20 @@ PlayView.prototype = $extend(GameState.prototype,{
 		new TextButton(flow,"Reset [Backspace]",function() {
 			_gthis.reset();
 		},Colors.RED,false,0.4);
+		this.overlayTransition(1.0,false,false);
 		var manager = hxd_snd_Manager.get();
 		manager.masterVolume = 0.5;
 		manager.masterChannelGroup.addEffect(new hxd_snd_effect_Reverb(hxd_snd_effect_ReverbPreset.DRUGGED));
 		manager.masterChannelGroup.addEffect(new hxd_snd_effect_Pitch(0.5));
+	}
+	,overlayTransition: function(time,fadeOut,blockInteractions) {
+		var overlay = new h2d_Flow(this);
+		overlay.set_minWidth(this.width);
+		overlay.set_minHeight(this.height);
+		overlay.set_backgroundTile(h2d_Tile.fromColor(0));
+		overlay.set_enableInteractive(blockInteractions);
+		overlay.alpha = fadeOut ? 0.0 : 1.0;
+		Utils.tween(overlay,time,{ alpha : fadeOut ? 1.0 : 0.0}).onComplete($bind(overlay,overlay.remove));
 	}
 	,reset: function() {
 		App.instance.switchState(new PlayView(this.levelIndex));
@@ -5747,6 +5816,7 @@ Model.prototype = {
 			}
 			if(this.grid[newPos.x + p1.x][newPos.y + p1.y]._hx_index == 5) {
 				this.onWin.dispatch();
+				this.onWin.mute = true;
 			}
 		}
 		var _g = 0;
@@ -5811,7 +5881,7 @@ Model.prototype = {
 				this.grid[pt.x][pt.y] = Cell.Empty;
 				this.onRemoveDoor.dispatch(pt);
 			} else {
-				haxe_Log.trace("WARNING: invalid target type " + Std.string(_g2),{ fileName : "src/PlayViewLogic.hx", lineNumber : 165, className : "Model", methodName : "activateSwitch"});
+				haxe_Log.trace("WARNING: invalid target type " + Std.string(_g2),{ fileName : "src/PlayViewLogic.hx", lineNumber : 166, className : "Model", methodName : "activateSwitch"});
 			}
 		}
 	}
