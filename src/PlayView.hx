@@ -187,7 +187,9 @@ class PlayView extends GameState {
 			view.removeBatchElements(pos);
 		});
 
-		model.onWin.add(win);
+		model.onWin.add(() -> {
+			Actuate.timer(0.5).onComplete(win);
+		});
 
 		for (x in 0...Model.BOARD_WIDTH) {
 			for (y in 0...Model.BOARD_HEIGHT) {
