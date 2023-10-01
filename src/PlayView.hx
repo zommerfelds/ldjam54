@@ -233,12 +233,8 @@ class PlayView extends GameState {
 		flow.x = Gui.scale(10);
 		flow.y = Gui.scale(10);
 		flow.layout = Vertical;
-		new TextButton(flow, "Back", () -> {
-			App.instance.switchState(new MenuView());
-		}, Gui.Colors.GREY, false, 0.4);
-		new TextButton(flow, "Reset [Backspace]", () -> {
-			reset();
-		}, Gui.Colors.RED, false, 0.4);
+		new TextButton(flow, "Back [TAB]", back, Gui.Colors.GREY, false, 0.4);
+		new TextButton(flow, "Reset [BACKSPACE]", reset, Gui.Colors.RED, false, 0.4);
 
 		overlayTransition(1.0, false, false);
 
@@ -262,13 +258,13 @@ class PlayView extends GameState {
 		App.instance.switchState(new PlayView(levelIndex));
 	}
 
+	function back() {
+		App.instance.switchState(new MenuView());
+	}
+
 	function win() {
 		App.writeUnlockedLevel(levelIndex + 1);
-		if (levelIndex + 1 < Ldtk.world.levels.length) {
-			App.instance.switchState(new PlayView(levelIndex + 1));
-		} else {
-			App.instance.switchState(new MenuView());
-		}
+		App.instance.switchState(new StoryView(ldtkLevel.f_CompletedText, levelIndex));
 	}
 
 	function rebuildPlayerSprites() {
@@ -329,6 +325,8 @@ class PlayView extends GameState {
 						moveDiff = Some(new IPoint(1, 0));
 					case Key.BACKSPACE:
 						reset();
+					case Key.TAB:
+						back();
 					case _:
 				}
 			default:

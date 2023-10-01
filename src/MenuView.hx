@@ -1,3 +1,4 @@
+import hxd.Key;
 import motion.easing.Sine;
 import motion.Actuate;
 import LdtkProject.Ldtk;
@@ -32,21 +33,33 @@ class MenuView extends GameState {
 		levels.horizontalSpacing = Gui.scaleAsInt(10);
 		levels.verticalSpacing = Gui.scaleAsInt(10);
 		final unlockedLevel = App.loadUnlockedLevel();
-		new Gui.TextButton(levels, "Intro", () -> {
+
+		var enter = () -> {
 			App.instance.switchState(new IntroView());
-		}, Gui.Colors.BLUE, 0.8);
+		};
+
+		new Gui.TextButton(levels, "Intro", enter, Gui.Colors.BLUE, 0.8);
 		for (i in 0...Ldtk.proj.all_worlds.Default.levels.length) {
 			if (i > unlockedLevel)
 				break;
-			new Gui.TextButton(levels, "Exp. " + (i + 1), () -> {
+			enter = () -> {
 				App.instance.switchState(new PlayView(i));
-			}, Gui.Colors.BLUE, 0.8);
+			};
+			new Gui.TextButton(levels, "Exp. " + (i + 1), enter, Gui.Colors.BLUE, 0.8);
 		}
 
 		if (unlockedLevel >= Ldtk.proj.all_worlds.Default.levels.length) {
 			final winText = new Gui.Text("You beat the game!", centeringFlow);
 			Utils.tween(winText, 0.5, {alpha: 0.5}).ease(Sine.easeInOut).reflect().repeat();
+		} else {
+			new Gui.Text("[ENTER] for next level", centeringFlow, 0.5);
 		}
+
+		addEventListener(e -> {
+			if (e.kind == EKeyDown && e.keyCode == Key.ENTER) {
+				enter();
+			}
+		});
 
 		centeringFlow.addSpacing(Gui.scaleAsInt(100));
 

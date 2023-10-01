@@ -24,6 +24,8 @@ class App extends HerbalTeaApp {
 	}
 
 	public static function writeUnlockedLevel(unlockedLevel:Int) {
-		hxd.Save.save({unlockedLevel: unlockedLevel});
+		if (loadUnlockedLevel() < unlockedLevel) {
+			hxd.Save.save({unlockedLevel: unlockedLevel});
+		}
 	}
 }
