@@ -5525,6 +5525,7 @@ PlayView.prototype = $extend(GameState.prototype,{
 		flow.set_layout(h2d_FlowLayout.Vertical);
 		new TextButton(flow,"Back [TAB]",$bind(this,this.back),Colors.GREY,false,0.4);
 		new TextButton(flow,"Reset [BACKSPACE]",$bind(this,this.reset),Colors.RED,false,0.4);
+		new Text("Press arrow keys to move.",flow,0.4);
 		this.overlayTransition(1.0,false,false);
 	}
 	,overlayTransition: function(time,fadeOut,blockInteractions) {
