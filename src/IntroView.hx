@@ -60,14 +60,6 @@ class IntroView extends GameState {
 		button.alpha = 0.0;
 		Utils.tween(button, 1.0, {alpha: 1.0}).delay(9.0).ease(Cubic.easeInOut);
 
-		final flow = new Flow(this);
-		flow.x = Gui.scale(10);
-		flow.y = Gui.scale(10);
-		flow.layout = Vertical;
-		new TextButton(flow, "Back", () -> {
-			App.instance.switchState(new MenuView());
-		}, Gui.Colors.GREY, false, 0.4);
-
 		addEventListener(e -> {
 			if (enableEnter && e.kind == EKeyDown && e.keyCode == Key.ENTER) {
 				done();
