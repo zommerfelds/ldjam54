@@ -99,6 +99,9 @@ class Button extends h2d.Object {
 		content.paddingHorizontal = Std.int(horizontalPadding);
 		content.paddingVertical = Std.int(verticalPadding);
 		content.verticalAlign = Middle;
+		content.interactive.onKeyDown = e -> {
+			e.propagate = true;
+		};
 		content.interactive.onClick = (e) -> {
 			e.propagate = false;
 			if (!enabled)
