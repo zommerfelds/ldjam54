@@ -3739,6 +3739,9 @@ var Button = function(parent,onClickFn,backgroundColor,disableOnClick) {
 	_this.set_paddingTop(v);
 	_this.set_paddingBottom(v);
 	this.content.set_verticalAlign(h2d_FlowAlign.Middle);
+	this.content.interactive.onKeyDown = function(e) {
+		e.propagate = true;
+	};
 	this.content.interactive.onClick = function(e) {
 		e.propagate = false;
 		if(!_gthis.enabled) {
