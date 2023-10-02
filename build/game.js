@@ -3965,17 +3965,6 @@ IntroView.prototype = $extend(GameState.prototype,{
 		var button = new TextButton(centeringFlow,"See the experiments [ENTER]",$bind(this,this.done),Colors.GREEN,null,0.5);
 		button.alpha = 0.0;
 		Utils.tween(button,1.0,{ alpha : 1.0}).delay(9.0).ease(motion_easing_Cubic.easeInOut);
-		var flow = new h2d_Flow(this);
-		var v = Gui.scale(10);
-		flow.posChanged = true;
-		flow.x = v;
-		var v = Gui.scale(10);
-		flow.posChanged = true;
-		flow.y = v;
-		flow.set_layout(h2d_FlowLayout.Vertical);
-		new TextButton(flow,"Back",function() {
-			App.instance.switchState(new MenuView());
-		},Colors.GREY,false,0.4);
 		this.addEventListener(function(e) {
 			if(enableEnter && e.kind == hxd_EventKind.EKeyDown && e.keyCode == 13) {
 				_gthis.done();
