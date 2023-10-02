@@ -396,11 +396,11 @@ App.main = function() {
 	App.instance = new App();
 };
 App.loadUnlockedLevel = function() {
-	return hxd_Save.load({ unlockedLevel : -1}).unlockedLevel;
+	return hxd_Save.load({ unlockedLevel : -1},"ldjam54").unlockedLevel;
 };
 App.writeUnlockedLevel = function(unlockedLevel) {
 	if(App.loadUnlockedLevel() < unlockedLevel) {
-		hxd_Save.save({ unlockedLevel : unlockedLevel});
+		hxd_Save.save({ unlockedLevel : unlockedLevel},"ldjam54");
 	}
 };
 App.__super__ = HerbalTeaApp;
